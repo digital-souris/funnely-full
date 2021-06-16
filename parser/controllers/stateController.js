@@ -1,12 +1,14 @@
 import StateHelper from "../helpers/StateHelper";
 import State from "../../database/State";
 import trees from 'tress'
+import Gender from "../../database/Gender";
 
 export default {
     async saveStates(channel) {
         try {
             if (channel.link) {
-                const stateHelper = new StateHelper(channel)
+                const genders = await Gender.find()
+                const stateHelper = new StateHelper(channel, genders)
                 const statesLink = await stateHelper.findStatesToChannel(channel.link)
                 for (let state of statesLink) {
                     if (state) {

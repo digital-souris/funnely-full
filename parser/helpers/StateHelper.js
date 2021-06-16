@@ -1,12 +1,13 @@
 import cheerio from 'cheerio'
 import moment from 'moment'
 import parserHelper from "./parserHelper";
-import Gender from "../../database/Gender";
+import _ from 'lodash'
 
 export default class StateHelper {
-    constructor(channel, data = {}) {
+    constructor(channel, gender, data = {}) {
         this.channel = channel
         this.data = data
+        this.genders = gender
     }
 
     async findStatesToChannel(link = this.channel.link, links = []) {
@@ -176,11 +177,8 @@ export default class StateHelper {
                 name = user.name.split(' ')[0]
                 surname = user.name.split(' ')[1]
             }
-            let findGender = await Gender.findOne({
-                $or: [
-                    {name: name},
-                    {surname: surname}
-                ]
+            let findGender = _.find(this.genders, item => {
+                return item.name === name || item.surname === surname
             })
             if (findGender) {
                 return findGender.gender;
