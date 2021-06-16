@@ -37,7 +37,7 @@ const stateSchema = new Schema({
         isPartner: Boolean
     },
     likes: {
-        count: Number,
+        all: Number,
         gender: {
             male: Number,
             female: Number

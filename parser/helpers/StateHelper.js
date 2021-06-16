@@ -44,8 +44,8 @@ export default class StateHelper {
         try {
             this.data.link = link
             this.data.channel = this.channel
-            await this.getBodyPublication()
             await this.getDataApiPublication()
+            await this.getBodyPublication()
             await this.parseCounter()
             await this.parseLikes()
             return this.data
@@ -63,7 +63,6 @@ export default class StateHelper {
                 json = JSON.parse(json)
                 this.data.ownerUid = json.publisher.ownerUid
                 this.data.publisherId = json.publisher.id
-                this.data.documentID = `native%3A${this.data.publisherId}`
                 await this.parseContent(page.body, json)
             }
             return this.data
@@ -76,7 +75,6 @@ export default class StateHelper {
     async parseCounter() {
         try {
             const href = `https://zen.yandex.ru/api/comments/top-comments?withUser=true&publisherId=${this.data.publisherId}&documentId=${this.data.documentID}&channelOwnerUid=${this.data.ownerUid}`
-            console.log(href)
             const page = await parserHelper.loadPage(href)
             if (page && page.statusCode === 200) {
                 let json = page.body
@@ -87,12 +85,9 @@ export default class StateHelper {
                         female: 0
                     }
                 }
-                if (json.comments.length) {
-                    for (let comment of json.comments) {
-                        await this.parseComment(comment)
-                    }
+                for (let comment of json.comments) {
+                    await this.parseComment(comment)
                 }
-
                 for (let user of json.authors) {
                     const gender = await this.parseGender(user)
                     if (gender !== undefined) {
@@ -131,6 +126,7 @@ export default class StateHelper {
         try {
             let publication = this.data.link.split('-')
             publication = publication[publication.length - 1]
+            this.data.documentID = `native%3A${publication}`
             publication = `https://zen.yandex.ru/media-api/publication-view-stat?publicationId=${publication}`
             let page = await parserHelper.loadPage(publication)
             if (page && page.statusCode === 200) {
@@ -230,19 +226,16 @@ export default class StateHelper {
                 for (let item of content.blocks) {
                     if (item.type === 'atomic:embed') {
                         this.data.content.count.video++
-                    }
-                    else if(item.type === 'atomic:image') {
+                    } else if (item.type === 'atomic:image') {
                         this.data.content.count.image++
-                    }
-                    else {
+                    } else {
                         this.data.content.count.text += item.text.length
                     }
                 }
                 if (Object.keys(content.entityMap).length) {
                     this.data.content.count.link = Object.keys(content.entityMap).length
                 }
-            }
-            else if (this.data.content.type === 'gif') {
+            } else if (this.data.content.type === 'gif') {
                 this.data.content.count.video++
                 this.data.content.count.text += json.og.description.length
             }
@@ -251,8 +244,7 @@ export default class StateHelper {
                 this.data.content.isPartner = 1
             }
             return this.data
-        }
-        catch (e) {
+        } catch (e) {
             console.log(e)
             return undefined
         }
@@ -261,16 +253,13 @@ export default class StateHelper {
     getNextUpdateDate() {
         if (this.channel.user) {
             return moment().add(12, 'h').format('YYYY-MM-DD hh:mm')
-        }
-        else {
+        } else {
             let now = moment().format('YYYY-MM-DD hh:mm')
             if (moment(this.data.publishDate).add(7, 'd').isAfter(now)) {
-                return  moment().add(1, 'd').format('YYYY-MM-DD hh:mm')
-            }
-            else if(moment(this.data.publishDate).add(1, 'M').isAfter(now)) {
-                return  moment().add(7, 'd').format('YYYY-MM-DD hh:mm')
-            }
-            else {
+                return moment().add(1, 'd').format('YYYY-MM-DD hh:mm')
+            } else if (moment(this.data.publishDate).add(1, 'M').isAfter(now)) {
+                return moment().add(7, 'd').format('YYYY-MM-DD hh:mm')
+            } else {
                 return moment().add(1, 'M').format('YYYY-MM-DD hh:mm')
             }
         }
