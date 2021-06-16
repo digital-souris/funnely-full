@@ -47,7 +47,7 @@ export default {
                         console.log(e)
                         return done(e, false)
                     }
-                }, 5)
+                }, 1)
                 this.trees.drain = async function () {
                     try {
                         channel.settings.statesCount += vm.counter

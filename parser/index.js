@@ -20,7 +20,6 @@ app.use(bodyParser.json())
 
 const db = database.connection
 
-channelController.findAllNewChannelsByPage()
 
 db.on('error', (err) => {
     console.log(err)
@@ -29,4 +28,5 @@ db.once('open', async () => {
     app.listen(process.env.PORT, () => {
         console.log(`Сервер запущен ` + process.env.PORT)
     })
+    await channelController.findAllNewChannelsByPage()
 })

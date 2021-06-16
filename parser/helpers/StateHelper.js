@@ -4,8 +4,9 @@ import parserHelper from "./parserHelper";
 import Gender from "../../database/Gender";
 
 export default class StateHelper {
-    constructor(channel) {
+    constructor(channel, data = {}) {
         this.channel = channel
+        this.data = data
     }
 
     async findStatesToChannel(link = this.channel.link, links = []) {
@@ -41,7 +42,6 @@ export default class StateHelper {
 
     async createDataToState(link) {
         try {
-            this.data = {}
             this.data.status = true
             this.data.link = link
             this.data.channel = this.channel

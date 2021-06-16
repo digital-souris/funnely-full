@@ -101,10 +101,13 @@ export default {
                 if (!tag) {
                     tag = new Tag({name: name})
                     await tag.save()
+                    if (!tag) {
+                        return false
+                    }
                 }
                 return tag
             }
-            return null
+            return false
         }
         catch (e) {
             console.log(e)
