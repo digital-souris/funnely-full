@@ -3,7 +3,9 @@ import dotenv from 'dotenv'
 
 dotenv.config()
 
-mongoose.set('debug', true)
+if (process.env.NODE_ENV !== 'production') {
+    mongoose.set('debug', true)
+}
 
 mongoose.set('useCreateIndex', true)
 

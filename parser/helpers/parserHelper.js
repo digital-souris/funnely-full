@@ -6,15 +6,18 @@ import Tag from "../../database/Tag";
 
 export default {
     proxyList: [
-        '188.130.210.249:1050@0F4Qj0:aoW3wJXzto'
+        'http://b6d6a2cbc4:6a5b466c0f@45.151.144.4:44303'
     ],
     async getStateDate(link) {
         try {
             const load = await this.loadPage(link)
             if (load.statusCode === 200) {
                 const content = this.getDataByBody(load.body, 'w._data = {')
-                const contentJson = JSON.parse(content)
-                return moment(contentJson.og.publishDate).format('YYYY-MM-DD hh:mm')
+                if (content && content.length) {
+                    const contentJson = JSON.parse(content)
+                    return moment(contentJson.og.publishDate).format('YYYY-MM-DD hh:mm')
+                }
+                return
             }
         }
         catch (e) {
@@ -42,13 +45,12 @@ export default {
     async loadPage(link) {
         try {
             let page
-            if (!this.proxy) {
+            if (!this.agent) {
                 page = await axios.get(link)
             }
             else {
-                const agent = new HttpsProxyAgent(this.proxy)
                 page = await axios.get(link, {
-                    httpsAgent: agent
+                    httpsAgent: this.agent
                 })
             }
             page.statusCode = page.status
@@ -56,8 +58,8 @@ export default {
             return page
         }
         catch (e) {
-            if (!this.proxy) {
-                this.proxy = _.sample(this.proxyList)
+            if (!this.agent) {
+                this.agent = new HttpsProxyAgent(_.sample(this.proxyList))
                 return  this.loadPage(link)
             }
             else {
@@ -94,12 +96,15 @@ export default {
     },
     async findOrCreate(name) {
         try {
-            let tag = await Tag.findOne({name: name})
-            if (!tag) {
-                tag = new Tag({name: name})
-                await tag.save()
+            if(typeof name === "string") {
+                let tag = await Tag.findOne({name: name})
+                if (!tag) {
+                    tag = new Tag({name: name})
+                    await tag.save()
+                }
+                return tag
             }
-            return tag
+            return null
         }
         catch (e) {
             console.log(e)

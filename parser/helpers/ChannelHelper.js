@@ -57,8 +57,9 @@ export default class ChannelHelper {
                     }
                 }
                 data.settings.lastState = await this.getDateLastState(page)
+                return data
             }
-            return data
+            return false
         } catch (e) {
             console.log(e)
             return null

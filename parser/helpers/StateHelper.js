@@ -4,9 +4,8 @@ import parserHelper from "./parserHelper";
 import Gender from "../../database/Gender";
 
 export default class StateHelper {
-    constructor(channel, data = {}) {
+    constructor(channel) {
         this.channel = channel
-        this.data = data
     }
 
     async findStatesToChannel(link = this.channel.link, links = []) {
@@ -42,6 +41,8 @@ export default class StateHelper {
 
     async createDataToState(link) {
         try {
+            this.data = {}
+            this.data.status = true
             this.data.link = link
             this.data.channel = this.channel
             await this.getDataApiPublication()
@@ -65,8 +66,12 @@ export default class StateHelper {
                 this.data.publisherId = json.publisher.id
                 await this.parseContent(page.body, json)
             }
+            else {
+                this.data.status = false
+            }
             return this.data
         } catch (e) {
+            this.data.status = false
             console.log(e)
             return null
         }
@@ -99,8 +104,12 @@ export default class StateHelper {
                     }
                 }
             }
+            else {
+                this.data.status = false
+            }
             return this.data
         } catch (e) {
+            this.data.status = false
             console.log(e)
             return null
         }
@@ -111,12 +120,16 @@ export default class StateHelper {
             const link = `https://zen.yandex.ru/api/comments/child-comments/${comment.id}?publisherId=${comment.publisherId}&documentId=${comment.documentId}&channelOwnerUid=${this.data.ownerUid}`
             const page = await parserHelper.loadPage(link)
             if (page && page.statusCode === 200) {
-                let json = JSON.parse(page.body)
+                let json = page.body
                 this.data.comments.all += page.body.comments.length
                 this.data.comments.max = Math.max(this.data.comments.max, json.comments.length)
             }
+            else {
+                this.data.status = false
+            }
             return this.data
         } catch (e) {
+            this.data.status = false
             console.log(e)
             return null
         }
@@ -144,8 +157,12 @@ export default class StateHelper {
                     toEnd: json.viewsTillEnd
                 }
             }
+            else {
+                this.data.status = false
+            }
             return this.data
         } catch (e) {
+            this.data.status = false
             console.log(e)
             return null
         }
@@ -195,8 +212,12 @@ export default class StateHelper {
                     return await this.parseLikes(offset + 100)
                 }
             }
+            else {
+                this.data.status = false
+            }
             return this.data
         } catch (e) {
+            this.data.status = false
             console.log(e)
             return null
         }
@@ -206,7 +227,10 @@ export default class StateHelper {
         try {
             this.data.tags = []
             for (let tag of json.publication.tags) {
-                this.data.tags.push(await parserHelper.findOrCreate(tag.title))
+                const findTag = await parserHelper.findOrCreate(tag.title)
+                if (findTag) {
+                    this.data.tags.push(findTag)
+                }
             }
             this.data.title = json.og.title
             this.data.content = {
