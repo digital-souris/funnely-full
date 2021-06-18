@@ -32,4 +32,5 @@ db.once('open', async () => {
     cron.schedule('*/10 * * * *', async () => {
         await channelController.findAllNewChannelsByPage()
     })
+    await channelController.findAllNewChannelsByPage()
 })
