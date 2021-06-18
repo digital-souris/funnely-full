@@ -21,8 +21,11 @@ export default class StateHelper {
                 }
                 if (json && json.items) {
                     for (let state of json.items) {
-                        console.log(links)
-                        links.push(await parserHelper.sortData(state))
+                        const findState = await parserHelper.sortData(state)
+                        if (findState) {
+                            links.push(findState)
+                        }
+
                     }
                     if (json.more && json.more.link) {
                         more = json.more.link
