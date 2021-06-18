@@ -21,6 +21,7 @@ export default class StateHelper {
                 }
                 if (json && json.items) {
                     for (let state of json.items) {
+                        console.log(links)
                         links.push(await parserHelper.sortData(state))
                     }
                     if (json.more && json.more.link) {
@@ -89,10 +90,10 @@ export default class StateHelper {
                         female: 0
                     }
                 }
-                /*for (let comment of json.comments) {
+                for (let comment of json.comments) {
                     await this.parseComment(comment)
-                }*/
-                for (let user of json.authors) {
+                }
+                /*for (let user of json.authors) {
                     const gender = await this.parseGender(user)
                     if (gender !== undefined) {
                         if (gender) {
@@ -101,7 +102,7 @@ export default class StateHelper {
                             this.data.comments.gender.male++
                         }
                     }
-                }
+                }*/
             }
             else {
                 this.data.status = false
