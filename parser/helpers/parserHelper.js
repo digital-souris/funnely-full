@@ -19,8 +19,7 @@ export default {
                 }
                 return
             }
-        }
-        catch (e) {
+        } catch (e) {
             console.log(e)
             return null
         }
@@ -36,8 +35,7 @@ export default {
                 }
             }
             return item
-        }
-        catch (e) {
+        } catch (e) {
             console.log(e)
             return false
         }
@@ -47,8 +45,7 @@ export default {
             let page
             if (!this.agent) {
                 page = await axios.get(link)
-            }
-            else {
+            } else {
                 page = await axios.get(link, {
                     httpsAgent: this.agent
                 })
@@ -56,17 +53,15 @@ export default {
             page.statusCode = page.status
             page.body = page.data
             return page
-        }
-        catch (e) {
-            if (!this.agent) {
+        } catch (e) {
+            /*if (!this.agent) {
                 this.agent = new HttpsProxyAgent(_.sample(this.proxyList))
                 return  this.loadPage(link)
-            }
-            else {
-                console.log(e)
-                return null
-            }
-
+            }*/
+            //else {
+            console.log(e)
+            return null
+            //}
         }
     },
     getDataByBody(body, first) {
@@ -76,18 +71,17 @@ export default {
         let data = ''
         for (let i = start; i < body.length - 1; i++) {
             if (i && body[i] !== undefined && typeof body[i] == "string") {
-                data+=body[i]
+                data += body[i]
                 if (body[i] === '{') {
                     open++
                 }
-                if(body[i] === '}') {
+                if (body[i] === '}') {
                     end++
                 }
                 if (open === end && end !== 0) {
                     break
                 }
-            }
-            else {
+            } else {
                 break
             }
         }
@@ -96,7 +90,7 @@ export default {
     },
     async findOrCreate(name) {
         try {
-            if(typeof name === "string") {
+            if (typeof name === "string") {
                 let tag = await Tag.findOne({name: name})
                 if (!tag) {
                     tag = new Tag({name: name})
@@ -108,8 +102,7 @@ export default {
                 return tag
             }
             return false
-        }
-        catch (e) {
+        } catch (e) {
             console.log(e)
             return false
         }

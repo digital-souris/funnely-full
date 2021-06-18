@@ -47,7 +47,7 @@ export default class StateHelper {
             await this.getDataApiPublication()
             await this.getBodyPublication()
             await this.parseCounter()
-            await this.parseLikes()
+            //await this.parseLikes()
             return this.data
         } catch (e) {
             console.log(e)
