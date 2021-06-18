@@ -22,9 +22,9 @@ export default {
                         if (createData) {
                             const createChannel = new Channel(createData)
                             await createChannel.save()
-                            if (createChannel) {
+                            /*if (createChannel) {
                                 await stateController.saveStates(createChannel)
-                            }
+                            }*/
                         }
                     }
                 }

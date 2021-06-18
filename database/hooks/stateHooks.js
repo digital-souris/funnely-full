@@ -1,39 +1,32 @@
-import moment from 'moment'
-import parserHelper from "./parserHelper";
-import Gender from "../../database/Gender";
+import parserHelper from "../../parser/helpers/parserHelper";
+import Gender from "../Gender";
+import moment from "moment";
 
-export default class StateHelper {
-    constructor(channel, data = {}) {
-        this.channel = channel
-        this.data = data
-    }
-
-
-
-    async createDataToState(link) {
+export default {
+    async postCreate(state) {
         try {
-            this.data.status = true
-            this.data.link = link
-            this.data.channel = this.channel
-            await this.getDataApiPublication()
-            await this.getBodyPublication()
-            await this.parseCounter()
-            //await this.parseLikes()
-            return this.data
+            if (!state.publishDate) {
+                this.data = state
+                this.helpers = {}
+                await this.getDataApiPublication()
+                await this.getBodyPublication()
+                await this.parseCounter()
+                this.data.nextUpdate = await this.getNextUpdateDate(this.data.channel)
+                //await this.generateDataToSave()
+                await this.data.save()
+            }
         } catch (e) {
             console.log(e)
-            return null
         }
-    }
-
+    },
     async getBodyPublication() {
         try {
             const page = await parserHelper.loadPage(this.data.link)
             if (page && page.statusCode === 200) {
                 let json = parserHelper.getDataByBody(page.body, 'w._data = {')
                 json = JSON.parse(json)
-                this.data.ownerUid = json.publisher.ownerUid
-                this.data.publisherId = json.publisher.id
+                this.helpers.ownerUid = json.publisher.ownerUid
+                this.helpers.publisherId = json.publisher.id
                 await this.parseContent(page.body, json)
             }
             else {
@@ -45,11 +38,11 @@ export default class StateHelper {
             console.log(e)
             return null
         }
-    }
+    },
 
     async parseCounter() {
         try {
-            const href = `https://zen.yandex.ru/api/comments/top-comments?withUser=true&publisherId=${this.data.publisherId}&documentId=${this.data.documentID}&channelOwnerUid=${this.data.ownerUid}`
+            const href = `https://zen.yandex.ru/api/comments/top-comments?withUser=true&publisherId=${this.helpers.publisherId}&documentId=${this.helpers.documentID}&channelOwnerUid=${this.helpers.ownerUid}`
             const page = await parserHelper.loadPage(href)
             if (page && page.statusCode === 200) {
                 let json = page.body
@@ -60,6 +53,7 @@ export default class StateHelper {
                         female: 0
                     }
                 }
+                console.log(json.comments)
                 for (let comment of json.comments) {
                     await this.parseComment(comment)
                 }
@@ -74,20 +68,16 @@ export default class StateHelper {
                     }
                 }*/
             }
-            else {
-                this.data.status = false
-            }
             return this.data
         } catch (e) {
-            this.data.status = false
             console.log(e)
             return null
         }
-    }
+    },
 
     async parseComment(comment) {
         try {
-            const link = `https://zen.yandex.ru/api/comments/child-comments/${comment.id}?publisherId=${comment.publisherId}&documentId=${comment.documentId}&channelOwnerUid=${this.data.ownerUid}`
+            const link = `https://zen.yandex.ru/api/comments/child-comments/${comment.id}?publisherId=${comment.publisherId}&documentId=${comment.documentId}&channelOwnerUid=${this.helpers.ownerUid}`
             const page = await parserHelper.loadPage(link)
             if (page && page.statusCode === 200) {
                 let json = page.body
@@ -103,40 +93,32 @@ export default class StateHelper {
             console.log(e)
             return null
         }
-    }
+    },
 
     async getDataApiPublication() {
         try {
+
             let publication = this.data.link.split('-')
             publication = publication[publication.length - 1]
-            this.data.documentID = `native%3A${publication}`
+            this.helpers.documentID = `native%3A${publication}`
             publication = `https://zen.yandex.ru/media-api/publication-view-stat?publicationId=${publication}`
             let page = await parserHelper.loadPage(publication)
             if (page && page.statusCode === 200) {
                 let json = page.body
                 this.data.comments = {
                     all: json.comments,
-                    max: 0,
-                    gender: {
-                        male: 0,
-                        female: 0
-                    }
+                    max: 0
                 }
-                this.data.views = {
-                    all: json.views,
-                    toEnd: json.viewsTillEnd
-                }
-            }
-            else {
-                this.data.status = false
+                this.data.views = {}
+                this.data.views.all = json.views
+                this.data.views.toEnd = json.viewsTillEnd
             }
             return this.data
         } catch (e) {
-            this.data.status = false
             console.log(e)
             return null
         }
-    }
+    },
 
     async parseGender(user) {
         try {
@@ -160,11 +142,11 @@ export default class StateHelper {
             console.log(e)
             return undefined
         }
-    }
+    },
 
     async parseLikes(offset = 0) {
         try {
-            const link = `https://zen.yandex.ru/api/comments/document-likers/${this.data.documentID}?offset=${offset}&limit=100&publisherId=${this.data.publisherId}&documentId=${this.data.documentID}&commentId=0&channelOwnerUid=${this.data.ownerUid}&sorting=top`
+            const link = `https://zen.yandex.ru/api/comments/document-likers/${this.data.documentID}?offset=${offset}&limit=100&publisherId=${this.helpers.publisherId}&documentId=${this.helpers.documentID}&commentId=0&channelOwnerUid=${this.helpers.ownerUid}&sorting=top`
             const page = await parserHelper.loadPage(link)
             if (page && page.statusCode === 200) {
                 const json = page.body
@@ -191,7 +173,7 @@ export default class StateHelper {
             console.log(e)
             return null
         }
-    }
+    },
 
     async parseContent(body, json) {
         try {
@@ -203,35 +185,31 @@ export default class StateHelper {
                 }
             }
             this.data.title = json.og.title
+            this.data.image = json.og.imageUrl
             this.data.content = {
-                isPartner: 0,
-                count: {}
-            }
-            this.data.content.image = json.og.imageUrl
-            this.data.content.count = {
                 image: 0,
                 video: 0,
                 link: 0,
                 text: 0,
             }
-            this.data.content.type = json.publication.content.type
-            if (this.data.content.type === 'article') {
+            this.data.type = json.publication.content.type
+            if (this.data.type === 'article') {
                 let content = JSON.parse(json.publication.content.articleContent.contentState)
                 for (let item of content.blocks) {
                     if (item.type === 'atomic:embed') {
-                        this.data.content.count.video++
+                        this.data.count.video++
                     } else if (item.type === 'atomic:image') {
-                        this.data.content.count.image++
+                        this.data.count.image++
                     } else {
-                        this.data.content.count.text += item.text.length
+                        this.data.count.text += item.text.length
                     }
                 }
                 if (Object.keys(content.entityMap).length) {
-                    this.data.content.count.link = Object.keys(content.entityMap).length
+                    this.data.count.link = Object.keys(content.entityMap).length
                 }
-            } else if (this.data.content.type === 'gif') {
-                this.data.content.count.video++
-                this.data.content.count.text += json.og.description.length
+            } else if (this.data.type === 'gif') {
+                this.data.content.video++
+                this.data.content.text += json.og.description.length
             }
             this.data.publishDate = moment(json.og.publishDate).format('YYYY-MM-DD hh:mm')
             if (body.indexOf('Партнёрская публикация') !== -1) {
@@ -242,10 +220,30 @@ export default class StateHelper {
             console.log(e)
             return undefined
         }
-    }
+    },
 
-    getNextUpdateDate() {
-        if (this.channel.user) {
+    /*generateDataToSave() {
+        let isParser = this.data.content.isPartner
+        this.data = {
+            views: {
+                all: this.data.all,
+                toEnd: this.data.toEnd
+            },
+            tags: this.data.tags,
+            likes: this.data.likes,
+            comments: this.data.comments,
+            type: this.data.content.type,
+            title: this.data.title,
+            image: this.data.content.image,
+            content: this.data.content.count,
+            publishDate: this.data.publishDate,
+            nextUpdate: this.getNextUpdateDate(this.data.channel)
+        }
+        this.data.content.isPartner = isParser
+        return this.data
+    },*/
+    getNextUpdateDate(channel) {
+        if (channel.user) {
             return moment().add(12, 'h').format('YYYY-MM-DD hh:mm')
         } else {
             let now = moment().format('YYYY-MM-DD hh:mm')

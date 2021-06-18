@@ -1,11 +1,11 @@
 import mongoose from '../config/database'
+import stateHooks from "./hooks/stateHooks";
 
 const Schema = mongoose.Schema
 
 const stateSchema = new Schema({
     title: {
         type: String,
-        required: true,
     },
     link: {
         type: String,
@@ -54,5 +54,10 @@ const stateSchema = new Schema({
     publishDate: Date,
     nextUpdate: Date
 }, { timestamps: true })
+
+stateSchema.post('save', async function (state) {
+    console.log(state)
+    await stateHooks.postCreate(state)
+})
 
 export default mongoose.model('State', stateSchema)

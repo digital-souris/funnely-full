@@ -1,4 +1,5 @@
 import mongoose from '../config/database'
+import channelHooks from "./hooks/channelHooks";
 
 const Schema = mongoose.Schema
 
@@ -42,5 +43,8 @@ const channelSchema = new Schema({
     }
 }, {timestamps: true})
 
+channelSchema.post('save', async function () {
+    await channelHooks.createChannel(this)
+})
 
 export default mongoose.model('Channel', channelSchema)

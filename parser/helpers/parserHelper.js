@@ -106,5 +106,5 @@ export default {
             console.log(e)
             return false
         }
-    }
+    },
 }
