@@ -46,7 +46,9 @@ export default {
                     }
                 }
                 await channel.save()
+                return true
             }
+            return false
         } catch (e) {
             console.log(e)
             return null

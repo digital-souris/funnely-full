@@ -37,7 +37,7 @@ export default {
                 }
 
                 if (channels.next) {
-                    await this.findAllNewChannelsByPage(page)
+                    return await this.findAllNewChannelsByPage(page)
                 } else {
                     return true
                 }

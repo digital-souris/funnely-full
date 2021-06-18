@@ -89,9 +89,9 @@ export default class StateHelper {
                         female: 0
                     }
                 }
-                for (let comment of json.comments) {
+                /*for (let comment of json.comments) {
                     await this.parseComment(comment)
-                }
+                }*/
                 for (let user of json.authors) {
                     const gender = await this.parseGender(user)
                     if (gender !== undefined) {
