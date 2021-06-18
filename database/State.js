@@ -56,8 +56,7 @@ const stateSchema = new Schema({
 }, { timestamps: true })
 
 stateSchema.post('save', async function (state) {
-    console.log(state)
-    await stateHooks.postCreate(state)
+    stateHooks.postCreate(state)
 })
 
 export default mongoose.model('State', stateSchema)

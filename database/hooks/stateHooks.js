@@ -53,7 +53,6 @@ export default {
                         female: 0
                     }
                 }
-                console.log(json.comments)
                 for (let comment of json.comments) {
                     await this.parseComment(comment)
                 }
