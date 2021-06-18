@@ -197,15 +197,15 @@ export default {
                 let content = JSON.parse(json.publication.content.articleContent.contentState)
                 for (let item of content.blocks) {
                     if (item.type === 'atomic:embed') {
-                        this.data.count.video++
+                        this.data.content.video++
                     } else if (item.type === 'atomic:image') {
-                        this.data.count.image++
+                        this.data.content.image++
                     } else {
-                        this.data.count.text += item.text.length
+                        this.data.content.text += item.text.length
                     }
                 }
                 if (Object.keys(content.entityMap).length) {
-                    this.data.count.link = Object.keys(content.entityMap).length
+                    this.data.content.link = Object.keys(content.entityMap).length
                 }
             } else if (this.data.type === 'gif') {
                 this.data.content.video++
