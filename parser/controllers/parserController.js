@@ -42,13 +42,17 @@ export default {
     },
     async loadPageToChannels(number) {
         try {
+            console.log(11)
             const page = await parserHelper.loadPage(`https://zen.yandex.ru/media/zen/channels?page=${number}`)
+            console.log(12)
             if (page && page.status === 200) {
                 let channels = []
                 let next = false
                 const $ = cheerio.load(page.data)
+                console.log(13)
                 const links = $('.channel-item__link')
                 await links.each((index, item) => {
+                    console.log(index)
                     channels.push(`https://zen.yandex.ru${$(item).attr('href')}`)
                 })
                 let nextPage = $('.pagination-prev-next__link')
