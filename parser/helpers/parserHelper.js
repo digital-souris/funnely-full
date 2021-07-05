@@ -42,6 +42,7 @@ export default {
     },
     async loadPage(link) {
         try {
+            console.log(111)
             let page
             if (!this.agent) {
                 page = await axios.get(link)
@@ -50,6 +51,7 @@ export default {
                     httpsAgent: this.agent
                 })
             }
+            console.log(112)
             page.statusCode = page.status
             page.body = page.data
             return page
