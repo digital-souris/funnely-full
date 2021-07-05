@@ -30,7 +30,7 @@ db.once('open', async () => {
         console.log(`Сервер запущен ` + process.env.PORT)
     })
 
-    cron.schedule('*/30 * * * *', async () => {
+    cron.schedule('*/15 * * * *', async () => {
         await channelController.findAllNewChannelsByPage()
     })
     await channelController.findAllNewChannelsByPage()
