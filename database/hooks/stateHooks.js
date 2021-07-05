@@ -14,9 +14,11 @@ export default {
                 this.data.nextUpdate = await this.getNextUpdateDate(this.data.channel)
                 //await this.generateDataToSave()
                 await this.data.save()
+                return true
             }
         } catch (e) {
             console.log(e)
+            return false
         }
     },
     async getBodyPublication() {
