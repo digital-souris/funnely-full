@@ -20,7 +20,7 @@ export default {
                                 channel: channel
                             }
                             const createState = new State(data)
-                            createState.save()
+                            await createState.save()
                             channel.settings.statesCount++
                             await channel.save()
                         }
