@@ -85,7 +85,7 @@ export default {
             if (page && page.statusCode === 200) {
                 let json = page.body
                 this.data.comments.all += page.body.comments.length
-                this.data.comments.max = Math.max(this.data.comments.max, json.comments.length)
+                // this.data.comments.max = Math.max(this.data.comments.max, json.comments.length)
             }
             else {
                 this.data.status = false
