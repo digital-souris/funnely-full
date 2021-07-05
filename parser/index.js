@@ -3,8 +3,8 @@ import dotenv from 'dotenv'
 import bodyParser from 'body-parser'
 import morgan from 'morgan'
 import database from '../config/database'
-import cron from 'node-cron'
 import channelController from "./controllers/channelController";
+import parserController from "./controllers/parserController";
 dotenv.config()
 
 const app = express()
@@ -29,9 +29,6 @@ db.once('open', async () => {
     app.listen(process.env.PORT, () => {
         console.log(`Сервер запущен ` + process.env.PORT)
     })
-
-    cron.schedule('*/15 * * * *', async () => {
-        await channelController.findAllNewChannelsByPage()
-    })
-    await channelController.findAllNewChannelsByPage()
+    await parserController.findChannels()
+    //await channelController.findAllNewChannelsByPage()
 })
