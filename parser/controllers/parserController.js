@@ -1,5 +1,4 @@
 import Setting from "../../database/Setting";
-import axios from "axios";
 import cheerio from "cheerio";
 import Channel from "../../database/Channel";
 import parserHelper from "../helpers/parserHelper";
@@ -24,20 +23,15 @@ export default {
                 if (channels.next) {
                     page.value++
                     await page.save()
+                    return await this.findChannels(page)
                 } else {
                     page.value = 0
                     await page.save()
-                }
-
-                if (channels.next) {
-                    return await this.findChannels(page)
-                } else {
                     return true
                 }
             }
             return false
-        }
-        catch (e) {
+        } catch (e) {
             console.log(e)
             return false
         }
@@ -60,48 +54,24 @@ export default {
                 }
                 return {channels: channels, next: next}
             }
-        }
-        catch (e) {
+        } catch (e) {
             console.log(e)
             return false
         }
     },
     async createChannelToDatabase(link) {
         try {
-            const page = await axios.get(link)
-            if (page && page.status === 200) {
-                let data = {}
-                data.settings = {
-                    statesCount: 0,
-                    subscribers: 0,
-                    auditory: 0
-                }
-                data.link = link
-                const $ = cheerio.load(page.data)
-                const counter = $('.desktop-channel-3-social-layout__counter-container')
-                if (counter.length) {
-                    for (let i = 0; i < counter.length ; i++) {
-                        const counterItem = counter.eq(i)
-                        const counterName = counterItem.find('.desktop-channel-3-counter__name').text()
-                        let counterValue = counterItem.find('.desktop-channel-3-counter__value').text()
-                        counterValue = counterValue.replace(/ /g,'')
-                        if (counterName === 'subscribers') {
-                            data.settings.subscribers = counterValue
-                        }
-                        if (counterName === 'audience') {
-                            data.settings.auditory = counterValue
-                        }
-                    }
-                }
-                //data.settings.lastState = await this.getDateLastState(page)
-                const createChannel = new Channel(data)
-                await createChannel.save()
-                return createChannel
+            let data = {}
+            data.settings = {
+                statesCount: 0,
+                subscribers: 0,
+                auditory: 0
             }
-            return false
-
-        }
-        catch (e) {
+            data.link = link
+            const createChannel = new Channel(data)
+            await createChannel.save()
+            return createChannel
+        } catch (e) {
             console.log(e)
             return false
         }
@@ -123,8 +93,7 @@ export default {
                 }
             }
             return publishDate
-        }
-        catch (e) {
+        } catch (e) {
             console.log(e)
             return null
         }
