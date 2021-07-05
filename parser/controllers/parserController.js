@@ -6,13 +6,16 @@ import parserHelper from "../helpers/parserHelper";
 export default {
     async findChannels(page) {
         try {
+            console.log(1)
             if (!page) {
                 page = await Setting.findOne({key: 'parserPage'})
                 if (!page.value) {
                     page.value = 1
                 }
             }
+            console.log(2)
             const channels = await this.loadPageToChannels(page.value)
+            console.log(3)
             if (channels && channels.channels.length) {
                 for (let channel of channels.channels) {
                     const channelInDb = await Channel.findOne({link: channel})
@@ -20,6 +23,7 @@ export default {
                         await this.createChannelToDatabase(channel)
                     }
                 }
+                console.log(4)
                 if (channels.next) {
                     page.value++
                     await page.save()
