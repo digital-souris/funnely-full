@@ -15,8 +15,8 @@ export default class StateHelper {
             this.data.status = true
             this.data.link = link
             this.data.channel = this.channel
-            await this.getDataApiPublication()
             await this.getBodyPublication()
+            await this.getDataApiPublication()
             await this.parseCounter()
             //await this.parseLikes()
             return this.data
