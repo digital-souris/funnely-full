@@ -49,33 +49,35 @@ export default class StateHelper {
 
     async parseCounter() {
         try {
-            const href = `https://zen.yandex.ru/api/comments/top-comments?withUser=true&publisherId=${this.data.publisherId}&documentId=${this.data.documentID}&channelOwnerUid=${this.data.ownerUid}`
-            const page = await parserHelper.loadPage(href)
-            if (page && page.statusCode === 200) {
-                let json = page.body
-                this.data.likes = {
-                    all: json.publicationLikeCount,
-                    gender: {
-                        male: 0,
-                        female: 0
-                    }
-                }
-                for (let comment of json.comments) {
-                    await this.parseComment(comment)
-                }
-                /*for (let user of json.authors) {
-                    const gender = await this.parseGender(user)
-                    if (gender !== undefined) {
-                        if (gender) {
-                            this.data.comments.gender.female++
-                        } else {
-                            this.data.comments.gender.male++
+            if (this.data.publisherId) {
+                const href = `https://zen.yandex.ru/api/comments/top-comments?withUser=true&publisherId=${this.data.publisherId}&documentId=${this.data.documentID}&channelOwnerUid=${this.data.ownerUid}`
+                const page = await parserHelper.loadPage(href)
+                if (page && page.statusCode === 200) {
+                    let json = page.body
+                    this.data.likes = {
+                        all: json.publicationLikeCount,
+                        gender: {
+                            male: 0,
+                            female: 0
                         }
                     }
-                }*/
-            }
-            else {
-                this.data.status = false
+                    for (let comment of json.comments) {
+                        await this.parseComment(comment)
+                    }
+                    /*for (let user of json.authors) {
+                        const gender = await this.parseGender(user)
+                        if (gender !== undefined) {
+                            if (gender) {
+                                this.data.comments.gender.female++
+                            } else {
+                                this.data.comments.gender.male++
+                            }
+                        }
+                    }*/
+                }
+                else {
+                    this.data.status = false
+                }
             }
             return this.data
         } catch (e) {
