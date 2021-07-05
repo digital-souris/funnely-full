@@ -1,6 +1,5 @@
-import axios from "axios";
+import needle from "needle";
 import moment from "moment";
-import HttpsProxyAgent from "https-proxy-agent";
 import _ from 'lodash'
 import Tag from "../../database/Tag";
 
@@ -17,7 +16,7 @@ export default {
                     const contentJson = JSON.parse(content)
                     return moment(contentJson.og.publishDate).format('YYYY-MM-DD hh:mm')
                 }
-                return
+                return false
             }
         } catch (e) {
             console.log(e)
@@ -43,17 +42,10 @@ export default {
     async loadPage(link) {
         try {
             console.log(111)
-            let page
-            if (!this.agent) {
-                page = await axios.get(link)
-            } else {
-                page = await axios.get(link, {
-                    httpsAgent: this.agent
-                })
-            }
+            let page = await needle(link, {
+                follow_max: 10,
+            })
             console.log(112)
-            page.statusCode = page.status
-            page.body = page.data
             return page
         } catch (e) {
             /*if (!this.agent) {

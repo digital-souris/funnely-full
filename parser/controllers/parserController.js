@@ -16,6 +16,7 @@ export default {
             console.log(2)
             const channels = await this.loadPageToChannels(page.value)
             console.log(3)
+            console.log(channels)
             if (channels && channels.channels.length) {
                 for (let channel of channels.channels) {
                     const channelInDb = await Channel.findOne({link: channel})
@@ -45,10 +46,10 @@ export default {
             console.log(11)
             const page = await parserHelper.loadPage(`https://zen.yandex.ru/media/zen/channels?page=${number}`)
             console.log(12)
-            if (page && page.status === 200) {
+            if (page && page.statusCode === 200) {
                 let channels = []
                 let next = false
-                const $ = cheerio.load(page.data)
+                const $ = cheerio.load(page.body)
                 console.log(13)
                 const links = $('.channel-item__link')
                 await links.each((index, item) => {
