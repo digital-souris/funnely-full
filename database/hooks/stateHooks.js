@@ -42,32 +42,34 @@ export default {
 
     async parseCounter() {
         try {
-            const href = `https://zen.yandex.ru/api/comments/top-comments?withUser=true&publisherId=${this.helpers.publisherId}&documentId=${this.helpers.documentID}&channelOwnerUid=${this.helpers.ownerUid}`
-            const page = await parserHelper.loadPage(href)
-            if (page && page.statusCode === 200) {
-                let json = page.body
-                this.data.likes = {
-                    all: json.publicationLikeCount,
-                    gender: {
-                        male: 0,
-                        female: 0
-                    }
-                }
-                for (let comment of json.comments) {
-                    await this.parseComment(comment)
-                }
-                /*for (let user of json.authors) {
-                    const gender = await this.parseGender(user)
-                    if (gender !== undefined) {
-                        if (gender) {
-                            this.data.comments.gender.female++
-                        } else {
-                            this.data.comments.gender.male++
+            if (this.helpers.publisherId) {
+                const href = `https://zen.yandex.ru/api/comments/top-comments?withUser=true&publisherId=${this.helpers.publisherId}&documentId=${this.helpers.documentID}&channelOwnerUid=${this.helpers.ownerUid}`
+                const page = await parserHelper.loadPage(href)
+                if (page && page.statusCode === 200) {
+                    let json = page.body
+                    this.data.likes = {
+                        all: json.publicationLikeCount,
+                        gender: {
+                            male: 0,
+                            female: 0
                         }
                     }
-                }*/
+                    for (let comment of json.comments) {
+                        await this.parseComment(comment)
+                    }
+                    /*for (let user of json.authors) {
+                        const gender = await this.parseGender(user)
+                        if (gender !== undefined) {
+                            if (gender) {
+                                this.data.comments.gender.female++
+                            } else {
+                                this.data.comments.gender.male++
+                            }
+                        }
+                    }*/
+                }
+                return this.data
             }
-            return this.data
         } catch (e) {
             console.log(e)
             return null
