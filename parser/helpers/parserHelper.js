@@ -44,6 +44,7 @@ export default {
             console.log(111)
             let page = await needle(link, {
                 follow_max: 10,
+                open_timeout: 20000
             })
             console.log(112)
             return page
