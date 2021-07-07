@@ -46,7 +46,9 @@ export default {
             let page = undefined
             console.log(link)
             setTimeout(() => {
-                console.log(typeof page)
+                if (typeof page === "undefined" && !error) {
+                    this.loadPage(link, true)
+                }
             }, 3000)
             page = await axios.get(link)
             console.log(112)
