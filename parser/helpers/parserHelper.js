@@ -50,7 +50,7 @@ export default {
                 timeout: 1000
             })
             setTimeout(() => {
-                console.log(status)
+                console.log(status , page)
             }, 3000)
             console.log(112)
             return page
