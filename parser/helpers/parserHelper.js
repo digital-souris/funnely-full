@@ -47,7 +47,7 @@ export default {
         try {
             let page = undefined
             console.log(link)
-            await sleep(100)
+            await sleep(150)
             page = await axios.get(link, {
                 timeout: 2000
             })
