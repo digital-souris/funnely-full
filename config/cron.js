@@ -1,6 +1,7 @@
 import cron from 'node-cron'
 import parserController from "../parser/controllers/parserController";
 import Channel from "../database/Channel";
+import Setting from "../database/Setting";
 export default () => {
     cron.schedule('0 * * * *', async () => {
         try {
@@ -8,6 +9,18 @@ export default () => {
         }
         catch (e) {
             console.log(e)
+        }
+    })
+    cron.schedule('*/20 * * * *', async () => {
+        try {
+            const page = Setting.findOne('parserPage')
+            if (page.value) {
+                await parserController.findChannels(page)
+            }
+        }
+        catch (e) {
+            console.log(e)
+            return false
         }
     })
     cron.schedule('*/10 * * * *', async () => {
