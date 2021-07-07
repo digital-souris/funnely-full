@@ -11,8 +11,9 @@ export default () => {
             console.log(e)
         }
     })
-    cron.schedule('*/20 * * * *', async () => {
+    cron.schedule('*/5 * * * *', async () => {
         try {
+            console.log(333)
             const page = Setting.findOne('parserPage')
             if (page.value) {
                 await parserController.findChannels(page)
