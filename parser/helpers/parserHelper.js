@@ -45,7 +45,9 @@ export default {
     async loadPage(link) {
         try {
             console.log(111)
-            let page = await axios.get(link)
+            let page = await axios.get(link, {
+                timeout: 1000
+            })
             console.log(112)
             return page
         } catch (e) {
