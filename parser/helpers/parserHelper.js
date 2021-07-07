@@ -4,7 +4,7 @@ import axiosRetry from 'axios-retry'
 import _ from 'lodash'
 import Tag from "../../database/Tag";
 
-axiosRetry(axios, { retries: 3 })
+axiosRetry(axios, { retries: 8 })
 
 export default {
     proxyList: [
@@ -45,14 +45,10 @@ export default {
     async loadPage(link, error = false) {
         try {
             let page = undefined
-            let status = false
             console.log(111)
             page = await axios.get(link, {
-                timeout: 1000
+                timeout: 2000
             })
-            setTimeout(() => {
-                console.log(typeof page)
-            }, 2000)
             console.log(112)
             return page
         } catch (e) {
