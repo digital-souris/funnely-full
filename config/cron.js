@@ -2,6 +2,7 @@ import cron from 'node-cron'
 import parserController from "../parser/controllers/parserController";
 import Channel from "../database/Channel";
 import Setting from "../database/Setting";
+import channelController from "../parser/controllers/channelController";
 
 cron.schedule('0 * * * *', async () => {
     try {
@@ -24,15 +25,16 @@ cron.schedule('*/20 * * * *', async () => {
 })
 cron.schedule('*/10 * * * *', async () => {
     try {
-        const channel = await Channel.findOne({
-            'settings.statesCount': 0,
+        const channels = await Channel.find({
             'settings.subscribers': 0,
             'settings.auditory': 0
         }).sort({
             createdAt: 1
-        })
-        if (channel) {
-
+        }).limit(500)
+        if (channels && channels.length) {
+            for(let channel of channels) {
+                await channelController.getDataByChannel(channel)
+            }
         }
 
     } catch (e) {

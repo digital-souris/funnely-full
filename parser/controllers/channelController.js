@@ -1,49 +1,32 @@
-import Setting from "../../database/Setting";
-import ChannelHelper from '../helpers/ChannelHelper'
-import Channel from "../../database/Channel";
-import stateController from "./stateController";
+import parserHelper from "../helpers/parserHelper";
+import cheerio from "cheerio";
 
 export default {
-    async findAllNewChannelsByPage(page) {
+    async getDataByChannel(channel) {
         try {
-            if (!page) {
-                page = await Setting.findOne({key: 'parserPage'})
-                if (!page.value) {
-                    page.value = 1
-                }
-            }
-            const channelHelper = new ChannelHelper()
-            const channels = await channelHelper.loadZenChannelsPage(page.value)
-            if (channels) {
-                for (let channel of channels.channels) {
-                    let findChannel = await Channel.findOne({link: channel})
-                    if (!findChannel) {
-                        const createData = await channelHelper.setDataForCreateChannel(channel)
-                        if (createData) {
-                            const createChannel = new Channel(createData)
-                            await createChannel.save()
-                            /*if (createChannel) {
-                                await stateController.saveStates(createChannel)
-                            }*/
+            const page = await parserHelper.loadPage(channel.link)
+            if (page && page.status === 200) {
+                const $ = cheerio.load(page.data)
+                const counter = $('.desktop-channel-3-social-layout__counter-container')
+                if (counter.length) {
+                    for (let i = 0; i < counter.length ; i++) {
+                        const counterItem = counter.eq(i)
+                        const counterName = counterItem.find('.desktop-channel-3-counter__name').text()
+                        let counterValue = counterItem.find('.desktop-channel-3-counter__value').text()
+                        counterValue = counterValue.replace(/ /g,'')
+                        if (counterName === 'subscribers') {
+                            channel.settings.subscribers = counterValue
+                        }
+                        if (counterName === 'audience') {
+                            channel.settings.auditory = counterValue
                         }
                     }
+                    await channel.save()
                 }
-                if (channels.next) {
-                    page.value++
-                    await page.save()
-                } else {
-                    page.value = 0
-                    await page.save()
-                }
-
-                if (channels.next) {
-                    return await this.findAllNewChannelsByPage(page)
-                } else {
-                    return true
-                }
-
             }
-        } catch (e) {
+            return channel
+        }
+        catch (e) {
             console.log(e)
             return false
         }
