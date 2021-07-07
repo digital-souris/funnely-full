@@ -50,10 +50,8 @@ export default {
             await sleep(100)
             setTimeout(() => {
                 console.log(typeof page)
-            }, 2000)
-            page = await axios.get(link, {
-                timeout: 2000
-            })
+            }, 3000)
+            page = await axios.get(link)
             console.log(112)
             return page
         } catch (e) {
