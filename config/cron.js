@@ -11,15 +11,25 @@ cron.schedule('0 * * * *', async () => {
         console.log(e)
     }
 })
-
-cron.schedule('*/5 * * * *', async () => {
+cron.schedule('*/20 * * * *', async () => {
+    try {
+        const page = await Setting.findOne({key: 'parserPage'})
+        if (page.value) {
+            await parserController.findChannels(page)
+        }
+    } catch (e) {
+        console.log(e)
+        return false
+    }
+})
+cron.schedule('*/10 * * * *', async () => {
     try {
         const channels = await Channel.find({
             'settings.subscribers': 0,
             'settings.auditory': 0
         }).sort({
             createdAt: 1
-        }).limit(250)
+        }).limit(500)
         if (channels && channels.length) {
             for(let channel of channels) {
                 await channelController.getDataByChannel(channel)
