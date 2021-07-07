@@ -2,6 +2,7 @@ import parserHelper from "../helpers/parserHelper";
 import cheerio from "cheerio";
 import moment from "moment";
 import Channel from "../../database/Channel";
+import State from "../../database/State";
 
 export default {
     async getDataByChannel(channel) {
@@ -36,7 +37,7 @@ export default {
     async getStatesToChannel(channel) {
         try {
             const channels = await this.findStatesToChannel(channel.link, [], channel)
-            await Channel.insertMany(channels)
+            await State.insertMany(channels)
             channel.lastUpdate = moment().format('YYYY-MM-DD hh:mm')
             channel.settings.statesCount = channels.length
             await channel.save()
