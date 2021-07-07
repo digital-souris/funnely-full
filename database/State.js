@@ -9,7 +9,8 @@ const stateSchema = new Schema({
     },
     link: {
         type: String,
-        required: true
+        required: true,
+        unique: true,
     },
     channel: {
         type: Schema.Types.ObjectId,
