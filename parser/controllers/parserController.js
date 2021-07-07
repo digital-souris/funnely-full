@@ -57,6 +57,7 @@ export default {
                     channels.push(`https://zen.yandex.ru${$(item).attr('href')}`)
                 })
                 let nextPage = $('.pagination-prev-next__link')
+                console.log(nextPage)
                 nextPage = nextPage.eq(nextPage.length - 1)
                 if (nextPage.text().indexOf('Следующие') !== -1) {
                     next = true
