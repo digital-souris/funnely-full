@@ -10,6 +10,7 @@ export default {
             const page = await parserHelper.loadPage(channel.link)
             if (page && page.status === 200) {
                 const $ = cheerio.load(page.data)
+                channel.name = $('title').text()
                 const counter = $('.desktop-channel-3-social-layout__counter-container')
                 if (counter.length) {
                     for (let i = 0; i < counter.length ; i++) {
