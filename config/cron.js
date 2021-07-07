@@ -13,7 +13,7 @@ cron.schedule('0 * * * *', async () => {
 cron.schedule('*/20 * * * *', async () => {
     try {
         console.log(333)
-        const page = await Setting.findOne('parserPage')
+        const page = await Setting.findOne({key: 'parserPage'})
         if (page.value) {
             await parserController.findChannels(page)
         }
