@@ -63,7 +63,6 @@ export default {
                 if (json && json.items) {
                     for (let state of json.items) {
                         const findState = await parserHelper.sortData(state)
-                        console.log(findState)
                         if (findState) {
                             links.push({link:findState, channel: channel})
                         }
