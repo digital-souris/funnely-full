@@ -46,7 +46,6 @@ export default {
     async loadPage(link, error = false) {
         try {
             let page = undefined
-            console.log(111)
             console.log(link)
             await sleep(100)
             page = await axios.get(link, {
