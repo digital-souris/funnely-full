@@ -41,13 +41,13 @@ export default {
             return false
         }
     },
-    async loadPage(link, error = false) {
+    async loadPage(link, error = 0) {
         try {
             let page = undefined
             console.log(link)
             setTimeout(async () => {
-                if (typeof page === "undefined" && !error) {
-                    await this.loadPage(link, true)
+                if (typeof page === "undefined" && error < 2) {
+                    await this.loadPage(link, error++)
                 }
             }, 5000)
             page = await axios.get(link)
