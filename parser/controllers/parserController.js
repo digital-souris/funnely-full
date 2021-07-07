@@ -17,15 +17,15 @@ export default {
             const channels = await this.loadPageToChannels(page.value)
             console.log(3)
             console.log(channels)
-            if (channels && channels.channels.length) {
-                for (let channel of channels.channels) {
+            if (channels && channels.length) {
+                for (let channel of channels) {
                     const channelInDb = await Channel.findOne({link: channel})
                     if (!channelInDb) {
                         await this.createChannelToDatabase(channel)
                     }
                 }
                 console.log(4)
-                if (channels.next) {
+                if (channels.length) {
                     page.value++
                     await page.save()
                     return await this.findChannels(page)
@@ -53,16 +53,9 @@ export default {
                 console.log(13)
                 const links = $('.channel-item__link')
                 await links.each((index, item) => {
-                    console.log(index)
                     channels.push(`https://zen.yandex.ru${$(item).attr('href')}`)
                 })
-                let nextPage = $('.pagination-prev-next__link')
-                console.log(nextPage)
-                nextPage = nextPage.eq(nextPage.length - 1)
-                if (nextPage.text().indexOf('Следующие') !== -1) {
-                    next = true
-                }
-                return {channels: channels, next: next}
+                return channels
             }
         } catch (e) {
             console.log(e)
