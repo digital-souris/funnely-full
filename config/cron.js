@@ -11,6 +11,22 @@ cron.schedule('0 * * * *', async () => {
         console.log(e)
     }
 })
+cron.schedule('*/10 * * * *', async () => {
+    try {
+        const channels = await Channel.find({
+            'settings.statesCount': 0,
+        }).sort({
+            createdAt: 1
+        }).limit(250)
+        if (channels && channels.length) {
+            for(let channel of channels) {
+                await channelController.getStatesToChannel(channel)
+            }
+        }
+    } catch (e) {
+        console.log(e)
+    }
+})
 
 cron.schedule('*/10 * * * *', async () => {
     try {
@@ -25,7 +41,6 @@ cron.schedule('*/10 * * * *', async () => {
                 await channelController.getDataByChannel(channel)
             }
         }
-
     } catch (e) {
         console.log(e)
     }
