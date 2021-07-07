@@ -73,7 +73,7 @@ export default {
                 }
             }
             if (more) {
-                return this.findStatesToChannel(more, links)
+                return this.findStatesToChannel(more, links, channel)
             } else {
                 return links
             }
