@@ -12,14 +12,14 @@ cron.schedule('0 * * * *', async () => {
     }
 })
 
-cron.schedule('*/10 * * * *', async () => {
+cron.schedule('*/5 * * * *', async () => {
     try {
         const channels = await Channel.find({
             'settings.subscribers': 0,
             'settings.auditory': 0
         }).sort({
             createdAt: 1
-        }).limit(500)
+        }).limit(250)
         if (channels && channels.length) {
             for(let channel of channels) {
                 await channelController.getDataByChannel(channel)
