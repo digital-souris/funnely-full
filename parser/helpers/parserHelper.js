@@ -1,7 +1,10 @@
-import needle from "needle";
+import axios from "axios";
 import moment from "moment";
+import axiosRetry from 'axios-retry'
 import _ from 'lodash'
 import Tag from "../../database/Tag";
+
+axiosRetry(axios, { retries: 3 })
 
 export default {
     proxyList: [
@@ -42,10 +45,7 @@ export default {
     async loadPage(link) {
         try {
             console.log(111)
-            let page = await needle(link, {
-                follow_max: 10,
-                open_timeout: 20000
-            })
+            let page = await axios.get(link)
             console.log(112)
             return page
         } catch (e) {
