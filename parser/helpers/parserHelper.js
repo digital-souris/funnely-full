@@ -46,7 +46,7 @@ export default {
         try {
             console.log(111)
             let page = await axios.get(link, {
-                timeout: 1000
+                timeout: 10000
             })
             console.log(112)
             return page
