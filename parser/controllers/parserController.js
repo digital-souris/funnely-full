@@ -46,10 +46,10 @@ export default {
             console.log(11)
             const page = await parserHelper.loadPage(`https://zen.yandex.ru/media/zen/channels?page=${number}`)
             console.log(12)
-            if (page && page.statusCode === 200) {
+            if (page && page.status === 200) {
                 let channels = []
                 let next = false
-                const $ = cheerio.load(page.body)
+                const $ = cheerio.load(page.data)
                 console.log(13)
                 const links = $('.channel-item__link')
                 await links.each((index, item) => {
