@@ -11,7 +11,7 @@ export default () => {
             console.log(e)
         }
     })
-    cron.schedule('*/10 * * * *', async () => {
+    cron.schedule('*/20 * * * *', async () => {
         try {
             console.log(333)
             const page = await Setting.findOne('parserPage')
