@@ -3,6 +3,7 @@ import moment from "moment";
 import axiosRetry from 'axios-retry'
 import _ from 'lodash'
 import Tag from "../../database/Tag";
+import sleep from 'msleep'
 
 axiosRetry(axios, { retries: 8 })
 
@@ -47,6 +48,7 @@ export default {
             let page = undefined
             console.log(111)
             console.log(link)
+            await sleep(100)
             page = await axios.get(link, {
                 timeout: 2000
             })
