@@ -4,7 +4,7 @@ import Channel from "../database/Channel";
 import Setting from "../database/Setting";
 import channelController from "../parser/controllers/channelController";
 
-cron.schedule('0 * * * *', async () => {
+cron.schedule('0 0 * * *', async () => {
     try {
         await parserController.findChannels()
     } catch (e) {
