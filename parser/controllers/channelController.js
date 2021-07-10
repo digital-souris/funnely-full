@@ -59,7 +59,7 @@ export default {
             const page = await parserHelper.loadPage(link)
             if (page && page.status === 200) {
                 console.log(typeof page.data)
-                if (!links.length || typeof page.data === "object") {
+                if (!links.length || typeof page.data !== "object") {
                     json = parserHelper.getDataByBody(page.data, 'exportData":{')
                     json = JSON.parse(json)
                 } else {
