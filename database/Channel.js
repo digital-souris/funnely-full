@@ -25,7 +25,7 @@ const channelSchema = new Schema({
     },
     isDelete: {
         type: Boolean,
-        default: 0
+        default: false
     },
     settings: {
         auditory: {
