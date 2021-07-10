@@ -51,12 +51,8 @@ export default {
                 }
             }, 5000)
             page = await axios.get(link)
-            console.log(112)
             return page
         } catch (e) {
-            if (!error) {
-                return await this.loadPage(link, true)
-            }
             /*if (!this.agent) {
                 this.agent = new HttpsProxyAgent(_.sample(this.proxyList))
                 return  this.loadPage(link)
