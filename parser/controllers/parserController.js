@@ -2,6 +2,7 @@ import Setting from "../../database/Setting";
 import cheerio from "cheerio";
 import Channel from "../../database/Channel";
 import parserHelper from "../helpers/parserHelper";
+import channelController from "./channelController";
 
 export default {
     async findChannels(page) {
@@ -99,6 +100,47 @@ export default {
         } catch (e) {
             console.log(e)
             return null
+        }
+    },
+    async  startParseStates() {
+        try {
+            const channels = await Channel.find({
+                'settings.statesCount': 0,
+                'config.startParse': {$ne: true},
+                'settings.auditory': {$ne: 0},
+                'isDelete': {$ne: true}
+            }).sort({
+                createdAt: 1
+            }).limit(250)
+            if (channels && channels.length) {
+                for(let channel of channels) {
+                    channel.config.startParse = true
+                    await channel.save()
+                    await channelController.getStatesToChannel(channel)
+                }
+            }
+        }
+        catch (e) {
+            console.log(e)
+        }
+    },
+    async  startParseChannelData() {
+        try {
+            const channels = await Channel.find({
+                'settings.subscribers': 0,
+                'settings.auditory': 0,
+                'isDelete': {$ne: 1}
+            }).sort({
+                createdAt: 1
+            }).limit(500)
+            if (channels && channels.length) {
+                for(let channel of channels) {
+                    await channelController.getDataByChannel(channel)
+                }
+            }
+        }
+        catch (e) {
+            console.log(e)
         }
     }
 }
