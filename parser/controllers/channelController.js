@@ -28,6 +28,10 @@ export default {
                     await channel.save()
                 }
             }
+            else {
+                channel.isDelete = 1
+                await channel.save()
+            }
             return channel
         }
         catch (e) {

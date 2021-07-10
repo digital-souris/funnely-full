@@ -23,6 +23,10 @@ const channelSchema = new Schema({
         type: Boolean,
         default: true
     },
+    isDelete: {
+        type: Boolean,
+        default: 0
+    },
     settings: {
         auditory: {
             type: Number,
