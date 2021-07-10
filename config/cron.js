@@ -11,12 +11,5 @@ cron.schedule('0 0 * * *', async () => {
         console.log(e)
     }
 })
-cron.schedule('*/15 * * * *', () => {
-    parserController.startParseStates()
-})
-
-cron.schedule('*/15 * * * *', () => {
-    parserController.startParseChannelData()
-})
 
 export default cron
