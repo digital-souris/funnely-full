@@ -11,8 +11,8 @@ module.exports = {
             env: {
                 PORT: 3001,
             },
-            combine_logs: false,
-            merge_logs: false
+            out_file: "/dev/null",
+            error_file: "/dev/null"
         }
     ],
 
