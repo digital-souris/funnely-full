@@ -42,10 +42,10 @@ export default {
     },
     async getStatesToChannel(channel) {
         try {
-            const channels = await this.findStatesToChannel(channel.link, 0, channel)
-            //await State.insertMany(channels)
+            const channels = await this.findStatesToChannel(channel.link, [], channel)
+            await State.insertMany(channels)
             channel.lastUpdate = moment().format('YYYY-MM-DD hh:mm')
-            channel.settings.statesCount = channels
+            channel.settings.statesCount = channels.length
             await channel.save()
             return channel
         }
@@ -54,7 +54,7 @@ export default {
             return false
         }
     },
-    async findStatesToChannel(link, links = 0, channel) {
+    async findStatesToChannel(link, links = [], channel) {
         try {
             let more, json
             const page = await parserHelper.loadPage(link)
@@ -70,12 +70,13 @@ export default {
                     for (let state of json.items) {
                         const findState = await parserHelper.sortData(state)
                         if (findState) {
-                            const stateInDb = await State.findOne({link: findState})
-                            if (!stateInDb) {
-                                const newState = new State({link:findState, channel: channel})
-                                await newState.save()
+                            const stateInArray = await _.findIndex(links, (item) => {
+                                return item.link === findState
+                            })
+                            console.log('State in Arrray ' +stateInArray)
+                            if (stateInArray === -1) {
+                                links.push({link:findState, channel: channel})
                             }
-                            links++
                         }
                     }
                     if (json.more && json.more.link) {
