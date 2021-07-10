@@ -15,6 +15,7 @@ cron.schedule('*/10 * * * *', async () => {
     try {
         const channels = await Channel.find({
             'settings.statesCount': 0,
+            'settings.auditory': {$ne: 0},
             'isDelete': {$ne: 1}
         }).sort({
             createdAt: 1
