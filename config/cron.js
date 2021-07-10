@@ -18,7 +18,7 @@ cron.schedule('*/10 * * * *', async () => {
             'settings.auditory': {$ne: 0},
             'isDelete': {$ne: 1}
         }).sort({
-            createdAt: -1
+            createdAt: 1
         }).limit(250)
         if (channels && channels.length) {
             for(let channel of channels) {

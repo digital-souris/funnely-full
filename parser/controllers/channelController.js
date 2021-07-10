@@ -74,8 +74,8 @@ export default {
                             if (!stateInDb) {
                                 const newState = new State({link:findState, channel: channel})
                                 await newState.save()
-                                links++
                             }
+                            links++
                         }
                     }
                     if (json.more && json.more.link) {
