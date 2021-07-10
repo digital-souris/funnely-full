@@ -1,6 +1,7 @@
 import parserHelper from "../helpers/parserHelper";
 import cheerio from "cheerio";
 import moment from "moment";
+import _ from 'lodash'
 import Channel from "../../database/Channel";
 import State from "../../database/State";
 
@@ -69,7 +70,12 @@ export default {
                     for (let state of json.items) {
                         const findState = await parserHelper.sortData(state)
                         if (findState) {
-                            links.push({link:findState, channel: channel})
+                            const stateInArray = await _.findIndex(links, (item) => {
+                                return item.link === findState
+                            })
+                            if (stateInArray === -1) {
+                                links.push({link:findState, channel: channel})
+                            }
                         }
                     }
                     if (json.more && json.more.link) {
