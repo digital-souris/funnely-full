@@ -73,6 +73,7 @@ export default {
                             const stateInArray = await _.findIndex(links, (item) => {
                                 return item.link === findState
                             })
+                            console.log('State in Arrray ' +stateInArray)
                             if (stateInArray === -1) {
                                 links.push({link:findState, channel: channel})
                             }
