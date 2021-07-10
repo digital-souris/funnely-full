@@ -110,7 +110,7 @@ export default {
                 'settings.auditory': {$ne: 0},
                 'isDelete': {$ne: true}
             }).sort({
-                createdAt: 1
+                updatedAt: -1
             }).limit(250)
             if (channels && channels.length) {
                 for(let channel of channels) {

@@ -46,7 +46,7 @@ export default {
             let page = undefined
             console.log(link)
             setTimeout(async () => {
-                if (typeof page === "undefined" && error < 2) {
+                if (typeof page === "undefined" && error < 5) {
                     await this.loadPage(link, error++)
                 }
             }, 5000)
