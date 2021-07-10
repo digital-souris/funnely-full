@@ -15,6 +15,7 @@ cron.schedule('*/10 * * * *', async () => {
     try {
         const channels = await Channel.find({
             'settings.statesCount': 0,
+            'config.startParse': {$ne: 1},
             'settings.auditory': {$ne: 0},
             'isDelete': {$ne: 1}
         }).sort({
@@ -22,6 +23,8 @@ cron.schedule('*/10 * * * *', async () => {
         }).limit(250)
         if (channels && channels.length) {
             for(let channel of channels) {
+                channel.config.startParse = true
+                await channel.save()
                 await channelController.getStatesToChannel(channel)
             }
         }

@@ -27,6 +27,12 @@ const channelSchema = new Schema({
         type: Boolean,
         default: false
     },
+    config: {
+      startParse: {
+          type: Boolean,
+          default: false
+      }
+    },
     settings: {
         auditory: {
             type: Number,
