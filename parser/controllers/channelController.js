@@ -56,7 +56,8 @@ export default {
     },
     async findStatesToChannel(link, links = [], channel) {
         try {
-            let more, json
+            let more = false
+            let json
             const page = await parserHelper.loadPage(link)
             if (page && page.status === 200) {
                 console.log(typeof page.data)
