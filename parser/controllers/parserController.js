@@ -106,7 +106,6 @@ export default {
         try {
             const channels = await Channel.find({
                 'settings.statesCount': 0,
-                'config.startParse': {$ne: true},
                 'settings.auditory': {$ne: 0},
                 'isDelete': {$ne: true}
             }).sort({
@@ -114,8 +113,6 @@ export default {
             }).limit(250)
             if (channels && channels.length) {
                 for(let channel of channels) {
-                    channel.config.startParse = true
-                    await channel.save()
                     await channelController.getStatesToChannel(channel)
                 }
             }
