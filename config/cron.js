@@ -11,11 +11,11 @@ cron.schedule('0 0 * * *', async () => {
         console.log(e)
     }
 })
-cron.schedule('*/30 * * * *', () => {
+cron.schedule('*/15 * * * *', () => {
     parserController.startParseStates()
 })
 
-cron.schedule('*/20 * * * *', () => {
+cron.schedule('*/15 * * * *', () => {
     parserController.startParseChannelData()
 })
 
