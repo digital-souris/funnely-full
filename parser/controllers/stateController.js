@@ -15,9 +15,7 @@ export default {
             await this.getBodyPublication()
             await this.parseCounter()
             this.data.nextUpdate = await this.getNextUpdateDate(this.data.channel)
-            //await this.generateDataToSave()
-            console.log(state)
-            state = this.data
+            state = await this.generateDataToSave()
             await state.save()
             return state
 
@@ -227,7 +225,7 @@ export default {
         }
     },
 
-    /*generateDataToSave() {
+    generateDataToSave() {
         let isParser = this.data.content.isPartner
         this.data = {
             views: {
@@ -246,7 +244,7 @@ export default {
         }
         this.data.content.isPartner = isParser
         return this.data
-    },*/
+    },
     getNextUpdateDate(channel) {
         if (channel.user) {
             return moment().add(12, 'h').format('YYYY-MM-DD hh:mm')
