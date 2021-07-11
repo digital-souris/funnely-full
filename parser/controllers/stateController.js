@@ -10,7 +10,6 @@ export default {
             this.state = state
             this.helpers = {}
             await this.getDataApiPublication()
-            console.log(this.state)
             await this.getBodyPublication()
             await this.parseCounter()
             this.state.nextUpdate = await this.getNextUpdateDate(this.state.channel)
@@ -98,7 +97,7 @@ export default {
 
     async getDataApiPublication() {
         try {
-
+            console.log(this.state)
             let publication = this.state.link.split('-')
             publication = publication[publication.length - 1]
             this.helpers.documentID = `native%3A${publication}`
