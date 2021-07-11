@@ -97,7 +97,6 @@ export default {
 
     async getDataApiPublication() {
         try {
-            console.log(this.state)
             let publication = this.state.link.split('-')
             publication = publication[publication.length - 1]
             this.helpers.documentID = `native%3A${publication}`
@@ -105,6 +104,7 @@ export default {
             console.log(publication)
             let page = await parserHelper.loadPage(publication)
             if (page && page.statusCode === 200) {
+                console.log(this.state)
                 let json = page.body
                 this.state.comments = {
                     all: json.comments,
