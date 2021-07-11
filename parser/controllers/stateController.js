@@ -4,7 +4,6 @@ import parserHelper from "../helpers/parserHelper";
 import Gender from "../../database/Gender";
 
 export default {
-    data: {},
     async postCreate(state) {
         try {
             this.data = {
@@ -12,14 +11,13 @@ export default {
                 link: state.link
             }
             this.helpers = {}
-            await this.getDataApiPublication()
-            await this.getBodyPublication()
-            await this.parseCounter()
+            this.data = await this.getDataApiPublication()
+            this.data = await this.getBodyPublication()
+            this.data = await this.parseCounter()
             this.data.nextUpdate = await this.getNextUpdateDate(this.data.channel)
             //state = await this.generateDataToSave()
-            console.log(this.data)
-            await state.save()
-            return state
+            //await state.save()
+            //return state
 
         } catch (e) {
             console.log(e)
@@ -108,6 +106,7 @@ export default {
             publication = publication[publication.length - 1]
             this.helpers.documentID = `native%3A${publication}`
             publication = `https://zen.yandex.ru/media-api/publication-view-stat?publicationId=${publication}`
+            console.log(publication)
             let page = await parserHelper.loadPage(publication)
             if (page && page.statusCode === 200) {
                 let json = page.body

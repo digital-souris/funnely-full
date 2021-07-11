@@ -1,5 +1,4 @@
 import mongoose from '../config/database'
-import stateHooks from "./hooks/stateHooks";
 
 const Schema = mongoose.Schema
 
