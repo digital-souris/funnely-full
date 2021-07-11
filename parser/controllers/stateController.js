@@ -208,7 +208,7 @@ export default {
                 this.state.content.text += json.og.description.length
             }
             this.state.publishDate = moment(json.og.publishDate).format('YYYY-MM-DD hh:mm')
-            if (body.indexOf('Партнёрская публикация') !== -1) {
+            if (body && typeof body === 'string' && body.indexOf('Партнёрская публикация') !== -1) {
                 this.state.content.isPartner = 1
             }
             return true
