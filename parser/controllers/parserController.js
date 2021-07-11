@@ -127,7 +127,9 @@ export default {
                 for (let state of states) {
                     const createState = await stateController.postCreate(state)
                     if (createState) {
+                        console.log(createState)
                         if (!state.channel.settings.lastState || moment(state.channel.settings.lastState).isBefore(createState.publishDate)) {
+                            console.log(321)
                             state.channel.settings.lastState = createState.publishDate
                             await state.channel.save()
                         }
