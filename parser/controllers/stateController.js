@@ -4,6 +4,7 @@ import parserHelper from "../helpers/parserHelper";
 import Gender from "../../database/Gender";
 
 export default {
+    data: {},
     async postCreate(state) {
         try {
             this.data = {
@@ -15,7 +16,8 @@ export default {
             await this.getBodyPublication()
             await this.parseCounter()
             this.data.nextUpdate = await this.getNextUpdateDate(this.data.channel)
-            state = await this.generateDataToSave()
+            //state = await this.generateDataToSave()
+            state = this.data
             await state.save()
             return state
 
