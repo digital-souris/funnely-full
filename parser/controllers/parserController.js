@@ -131,28 +131,24 @@ export default {
     },
     async startParseStatesData() {
         try {
-            this.job = tress(async (state, done) => {
-                const createState = await stateController.postCreate(state)
-                if (createState) {
-                    console.log(createState)
-                    const channel = await Channel.findOne({_id: state.channel._id})
-                    if (!channel) {
-                        console.log(321)
-                        channel.settings.lastState = createState.publishDate
-                        await channel.save()
-                    }
-                    else if(moment(channel.settings.lastState).isBefore(createState.publishDate)) {
-                        console.log(456)
-                        channel.settings.lastState = createState.publishDate
-                        await channel.save()
-                    }
-                }
-                return done(null, state)
-            }, 10)
             const states = await State.find({publishDate: undefined}).populate('channel').limit(750)
             if (states && states.length) {
                 for (let state of states) {
-                   await this.job.push(state)
+                   const createState = await stateController.postCreate(state)
+                    if (createState) {
+                        console.log(createState)
+                        const channel = await Channel.findOne({_id: state.channel._id})
+                        if (!channel) {
+                            console.log(321)
+                            channel.settings.lastState = createState.publishDate
+                            await channel.save()
+                        }
+                        else if(moment(channel.settings.lastState).isBefore(createState.publishDate)) {
+                            console.log(456)
+                            channel.settings.lastState = createState.publishDate
+                            await channel.save()
+                        }
+                    }
                 }
             }
             return true
