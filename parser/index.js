@@ -34,6 +34,7 @@ db.once('open', async () => {
     parserController.findChannels()
     parserController.startParseChannelData()
     parserController.startParseStates()
+    parserController.startParseStatesData()
     //await parserController.findChannels()
     //await channelController.findAllNewChannelsByPage()
 })

@@ -3,6 +3,8 @@ import cheerio from "cheerio";
 import Channel from "../../database/Channel";
 import parserHelper from "../helpers/parserHelper";
 import channelController from "./channelController";
+import State from "../../database/State";
+import stateController from "./stateController";
 
 export default {
     async findChannels(page) {
@@ -79,29 +81,7 @@ export default {
             return false
         }
     },
-    async getDateLastState(page) {
-        try {
-            let publishDate
-            const data = parserHelper.getDataByBody(page.data, 'exportData":{')
-            const json = JSON.parse(data)
-            if (json && json.items) {
-                for (let state of json.items) {
-                    const link = state.link
-                    if (link) {
-                        publishDate = await parserHelper.getStateDate(link)
-                    }
-                    if (publishDate) {
-                        break
-                    }
-                }
-            }
-            return publishDate
-        } catch (e) {
-            console.log(e)
-            return null
-        }
-    },
-    async  startParseStates() {
+    async startParseStates() {
         try {
             const channels = await Channel.find({
                 'settings.statesCount': 0,
@@ -137,6 +117,27 @@ export default {
         }
         catch (e) {
             console.log(e)
+        }
+    },
+    async startParseStatesData() {
+        try {
+            const states = await State.find({publishDate: undefined}).populate('channel').limit(250)
+            if (states && states.length) {
+                for (let state of states) {
+                    const createState = await stateController.postCreate(state)
+                    if (createState) {
+                        if (!state.channel.settings.lastState || moment(state.channel.settings.lastState).isBefore(createState.publishDate)) {
+                            state.channel.settings.lastState = createState.publishDate
+                            await state.channel.save()
+                        }
+                    }
+                }
+            }
+            return true
+        }
+        catch (e) {
+            console.log(e)
+            return false
         }
     }
 }
