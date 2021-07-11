@@ -128,8 +128,13 @@ export default {
                     const createState = await stateController.postCreate(state)
                     if (createState) {
                         console.log(createState)
-                        if (!state.channel.settings.lastState || moment(state.channel.settings.lastState).isBefore(createState.publishDate)) {
+                        if (!state.channel.settings.lastState) {
                             console.log(321)
+                            state.channel.settings.lastState = createState.publishDate
+                            await state.channel.save()
+                        }
+                        else if(moment(state.channel.settings.lastState).isBefore(createState.publishDate)) {
+                            console.log(456)
                             state.channel.settings.lastState = createState.publishDate
                             await state.channel.save()
                         }
