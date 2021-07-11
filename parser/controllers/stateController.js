@@ -226,7 +226,8 @@ export default {
     },
 
     generateDataToSave() {
-        let isParser = this.data.content.isPartner
+        console.log(this.data)
+        //let isParser = this.data.content.isPartner
         this.data = {
             views: {
                 all: this.data.all,
