@@ -12,7 +12,8 @@ export default {
         try {
             if (!page) {
                 page = await Setting.findOne({key: 'parserPage'})
-                if (!page.value) {
+                const dateNow = new Date()
+                if (!page.value && dateNow.getDay() === 1) {
                     page.value = 1
                 }
             }
