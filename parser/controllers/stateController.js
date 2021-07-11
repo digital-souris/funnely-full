@@ -17,7 +17,7 @@ export default {
             await this.parseCounter()
             this.data.nextUpdate = await this.getNextUpdateDate(this.data.channel)
             //state = await this.generateDataToSave()
-            state = this.data
+            console.log(this.data)
             await state.save()
             return state
 
