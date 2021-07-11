@@ -7,7 +7,6 @@ import channelController from "./channelController";
 export default {
     async findChannels(page) {
         try {
-            console.log(1)
             if (!page) {
                 page = await Setting.findOne({key: 'parserPage'})
                 if (!page.value) {
