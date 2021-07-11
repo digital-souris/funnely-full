@@ -18,25 +18,27 @@ export default {
                 }
             }
             console.log(2)
-            const channels = await this.loadPageToChannels(page.value)
-            console.log(3)
-            console.log(channels)
-            if (channels && channels.length) {
-                for (let channel of channels) {
-                    const channelInDb = await Channel.findOne({link: channel})
-                    if (!channelInDb) {
-                        await this.createChannelToDatabase(channel)
+            if (page.value) {
+                const channels = await this.loadPageToChannels(page.value)
+                console.log(3)
+                console.log(channels)
+                if (channels && channels.length) {
+                    for (let channel of channels) {
+                        const channelInDb = await Channel.findOne({link: channel})
+                        if (!channelInDb) {
+                            await this.createChannelToDatabase(channel)
+                        }
                     }
-                }
-                console.log(4)
-                if (channels.length) {
-                    page.value++
-                    await page.save()
-                    return await this.findChannels(page)
-                } else {
-                    page.value = 0
-                    await page.save()
-                    return true
+                    console.log(4)
+                    if (channels.length) {
+                        page.value++
+                        await page.save()
+                        return await this.findChannels(page)
+                    } else {
+                        page.value = 0
+                        await page.save()
+                        return true
+                    }
                 }
             }
             return false
