@@ -83,7 +83,7 @@ export default {
             const page = await parserHelper.loadPage(link)
             if (page && page.status === 200) {
                 let json = page.data
-                this.state.comments.all += page.body.comments.length
+                this.state.comments.all += page.data.comments.length
                 // this.state.comments.max = Math.max(this.state.comments.max, json.comments.length)
             } else {
                 this.state.status = false
