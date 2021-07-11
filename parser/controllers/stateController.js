@@ -13,8 +13,10 @@ export default {
             await this.parseCounter()
             this.data.nextUpdate = await this.getNextUpdateDate(this.data.channel)
             //await this.generateDataToSave()
-            await this.data.save()
-            return this.data
+            state = this.data
+            await state.save()
+            return state
+
         } catch (e) {
             console.log(e)
             return false
