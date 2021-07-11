@@ -11,7 +11,8 @@ module.exports = {
             env: {
                 PORT: 3001,
             },
-            "exec_mode": "cluster_mode",
+            "exec_mode": "cluster",
+            instances: 'max',
             "cron_restart": "30 * * * * *",
             out_file: "/dev/null",
             error_file: "/dev/null"
