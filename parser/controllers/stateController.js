@@ -10,11 +10,12 @@ export default {
             this.state = state
             this.helpers = {}
             await this.getDataApiPublication()
+            console.log(this.state)
             await this.getBodyPublication()
             await this.parseCounter()
             this.state.nextUpdate = await this.getNextUpdateDate(this.state.channel)
             //state = await this.generateDataToSave()
-            await this.state.save()
+            //await this.state.save()
             return this.state
 
         } catch (e) {
