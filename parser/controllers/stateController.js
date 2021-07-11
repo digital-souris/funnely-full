@@ -4,20 +4,18 @@ import parserHelper from "../helpers/parserHelper";
 import Gender from "../../database/Gender";
 
 export default {
+    state: {},
     async postCreate(state) {
         try {
-            this.data = {
-                channel: state.channel,
-                link: state.link
-            }
+            this.state = state
             this.helpers = {}
-            this.data = await this.getDataApiPublication()
-            this.data = await this.getBodyPublication()
-            this.data = await this.parseCounter()
-            this.data.nextUpdate = await this.getNextUpdateDate(this.data.channel)
+            await this.getDataApiPublication()
+            await this.getBodyPublication()
+            await this.parseCounter()
+            this.state.nextUpdate = await this.getNextUpdateDate(this.state.channel)
             //state = await this.generateDataToSave()
-            //await state.save()
-            //return state
+            await this.state.save()
+            return this.state
 
         } catch (e) {
             console.log(e)
@@ -26,20 +24,19 @@ export default {
     },
     async getBodyPublication() {
         try {
-            const page = await parserHelper.loadPage(this.data.link)
+            const page = await parserHelper.loadPage(this.state.link)
             if (page && page.statusCode === 200) {
                 let json = parserHelper.getDataByBody(page.body, 'w._data = {')
                 json = JSON.parse(json)
                 this.helpers.ownerUid = json.publisher.ownerUid
                 this.helpers.publisherId = json.publisher.id
                 await this.parseContent(page.body, json)
-                return this.data
+                return true
             } else {
-                this.data.status = false
+                return false
             }
-            return this.data
         } catch (e) {
-            this.data.status = false
+            this.state.status = false
             console.log(e)
             return null
         }
@@ -52,7 +49,7 @@ export default {
                 const page = await parserHelper.loadPage(href)
                 if (page && page.statusCode === 200) {
                     let json = page.body
-                    this.data.likes = {
+                    this.state.likes = {
                         all: json.publicationLikeCount,
                         gender: {
                             male: 0,
@@ -66,14 +63,13 @@ export default {
                         const gender = await this.parseGender(user)
                         if (gender !== undefined) {
                             if (gender) {
-                                this.data.comments.gender.female++
+                                this.state.comments.gender.female++
                             } else {
-                                this.data.comments.gender.male++
+                                this.state.comments.gender.male++
                             }
                         }
                     }*/
                 }
-                return this.data
             }
         } catch (e) {
             console.log(e)
@@ -87,14 +83,13 @@ export default {
             const page = await parserHelper.loadPage(link)
             if (page && page.statusCode === 200) {
                 let json = page.body
-                this.data.comments.all += page.body.comments.length
-                // this.data.comments.max = Math.max(this.data.comments.max, json.comments.length)
+                this.state.comments.all += page.body.comments.length
+                // this.state.comments.max = Math.max(this.state.comments.max, json.comments.length)
             } else {
-                this.data.status = false
+                this.state.status = false
             }
-            return this.data
+            return true
         } catch (e) {
-            this.data.status = false
             console.log(e)
             return null
         }
@@ -103,7 +98,7 @@ export default {
     async getDataApiPublication() {
         try {
 
-            let publication = this.data.link.split('-')
+            let publication = this.state.link.split('-')
             publication = publication[publication.length - 1]
             this.helpers.documentID = `native%3A${publication}`
             publication = `https://zen.yandex.ru/media-api/publication-view-stat?publicationId=${publication}`
@@ -111,15 +106,15 @@ export default {
             let page = await parserHelper.loadPage(publication)
             if (page && page.statusCode === 200) {
                 let json = page.body
-                this.data.comments = {
+                this.state.comments = {
                     all: json.comments,
                     max: 0
                 }
-                this.data.views = {}
-                this.data.views.all = json.views
-                this.data.views.toEnd = json.viewsTillEnd
+                this.state.views = {}
+                this.state.views.all = json.views
+                this.state.views.toEnd = json.viewsTillEnd
             }
-            return this.data
+            return true
         } catch (e) {
             console.log(e)
             return null
@@ -152,7 +147,7 @@ export default {
 
     async parseLikes(offset = 0) {
         try {
-            const link = `https://zen.yandex.ru/api/comments/document-likers/${this.data.documentID}?offset=${offset}&limit=100&publisherId=${this.helpers.publisherId}&documentId=${this.helpers.documentID}&commentId=0&channelOwnerUid=${this.helpers.ownerUid}&sorting=top`
+            const link = `https://zen.yandex.ru/api/comments/document-likers/${this.state.documentID}?offset=${offset}&limit=100&publisherId=${this.helpers.publisherId}&documentId=${this.helpers.documentID}&commentId=0&channelOwnerUid=${this.helpers.ownerUid}&sorting=top`
             const page = await parserHelper.loadPage(link)
             if (page && page.statusCode === 200) {
                 const json = page.body
@@ -160,21 +155,18 @@ export default {
                     let gender = await this.parseGender(author)
                     if (gender !== undefined) {
                         if (gender) {
-                            this.data.likes.gender.female++
+                            this.state.likes.gender.female++
                         } else {
-                            this.data.likes.gender.male++
+                            this.state.likes.gender.male++
                         }
                     }
                 }
                 if (json.hasMore) {
                     return await this.parseLikes(offset + 100)
                 }
-            } else {
-                this.data.status = false
             }
-            return this.data
+            return true
         } catch (e) {
-            this.data.status = false
             console.log(e)
             return null
         }
@@ -182,45 +174,45 @@ export default {
 
     async parseContent(body, json) {
         try {
-            this.data.tags = []
+            this.state.tags = []
             for (let tag of json.publication.tags) {
                 const findTag = await parserHelper.findOrCreate(tag.title)
                 if (findTag) {
-                    this.data.tags.push(findTag)
+                    this.state.tags.push(findTag)
                 }
             }
-            this.data.title = json.og.title
-            this.data.image = json.og.imageUrl
-            this.data.content = {
+            this.state.title = json.og.title
+            this.state.image = json.og.imageUrl
+            this.state.content = {
                 image: 0,
                 video: 0,
                 link: 0,
                 text: 0,
             }
-            this.data.type = json.publication.content.type
-            if (this.data.type === 'article') {
+            this.state.type = json.publication.content.type
+            if (this.state.type === 'article') {
                 let content = JSON.parse(json.publication.content.articleContent.contentState)
                 for (let item of content.blocks) {
                     if (item.type === 'atomic:embed') {
-                        this.data.content.video++
+                        this.state.content.video++
                     } else if (item.type === 'atomic:image') {
-                        this.data.content.image++
+                        this.state.content.image++
                     } else {
-                        this.data.content.text += item.text.length
+                        this.state.content.text += item.text.length
                     }
                 }
                 if (Object.keys(content.entityMap).length) {
-                    this.data.content.link = Object.keys(content.entityMap).length
+                    this.state.content.link = Object.keys(content.entityMap).length
                 }
-            } else if (this.data.type === 'gif') {
-                this.data.content.video++
-                this.data.content.text += json.og.description.length
+            } else if (this.state.type === 'gif') {
+                this.state.content.video++
+                this.state.content.text += json.og.description.length
             }
-            this.data.publishDate = moment(json.og.publishDate).format('YYYY-MM-DD hh:mm')
+            this.state.publishDate = moment(json.og.publishDate).format('YYYY-MM-DD hh:mm')
             if (body.indexOf('Партнёрская публикация') !== -1) {
-                this.data.content.isPartner = 1
+                this.state.content.isPartner = 1
             }
-            return this.data
+            return true
         } catch (e) {
             console.log(e)
             return undefined
@@ -228,34 +220,34 @@ export default {
     },
 
     generateDataToSave() {
-        console.log(this.data)
-        //let isParser = this.data.content.isPartner
-        this.data = {
+        console.log(this.state)
+        //let isParser = this.state.content.isPartner
+        this.state = {
             views: {
-                all: this.data.all,
-                toEnd: this.data.toEnd
+                all: this.state.all,
+                toEnd: this.state.toEnd
             },
-            tags: this.data.tags,
-            likes: this.data.likes,
-            comments: this.data.comments,
-            type: this.data.content.type,
-            title: this.data.title,
-            image: this.data.content.image,
-            content: this.data.content.count,
-            publishDate: this.data.publishDate,
-            nextUpdate: this.getNextUpdateDate(this.data.channel)
+            tags: this.state.tags,
+            likes: this.state.likes,
+            comments: this.state.comments,
+            type: this.state.content.type,
+            title: this.state.title,
+            image: this.state.content.image,
+            content: this.state.content.count,
+            publishDate: this.state.publishDate,
+            nextUpdate: this.getNextUpdateDate(this.state.channel)
         }
-        this.data.content.isPartner = isParser
-        return this.data
+        this.state.content.isPartner = isParser
+        return this.state
     },
     getNextUpdateDate(channel) {
         if (channel.user) {
             return moment().add(12, 'h').format('YYYY-MM-DD hh:mm')
         } else {
             let now = moment().format('YYYY-MM-DD hh:mm')
-            if (moment(this.data.publishDate).add(7, 'd').isAfter(now)) {
+            if (moment(this.state.publishDate).add(7, 'd').isAfter(now)) {
                 return moment().add(1, 'd').format('YYYY-MM-DD hh:mm')
-            } else if (moment(this.data.publishDate).add(1, 'M').isAfter(now)) {
+            } else if (moment(this.state.publishDate).add(1, 'M').isAfter(now)) {
                 return moment().add(7, 'd').format('YYYY-MM-DD hh:mm')
             } else {
                 return moment().add(1, 'M').format('YYYY-MM-DD hh:mm')
