@@ -149,7 +149,7 @@ export default {
                 }
                 return done(null, state)
             }, 10)
-            const states = await State.find({publishDate: undefined}).populate('channel').limit(250)
+            const states = await State.find({publishDate: undefined}).populate('channel').limit(750)
             if (states && states.length) {
                 for (let state of states) {
                    await this.job.push(state)
