@@ -33,6 +33,7 @@ export default {
                 this.helpers.ownerUid = json.publisher.ownerUid
                 this.helpers.publisherId = json.publisher.id
                 await this.parseContent(page.body, json)
+                return this.data
             } else {
                 this.data.status = false
             }
