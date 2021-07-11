@@ -5,6 +5,7 @@ import parserHelper from "../helpers/parserHelper";
 import channelController from "./channelController";
 import State from "../../database/State";
 import stateController from "./stateController";
+import moment from 'moment'
 
 export default {
     async findChannels(page) {
