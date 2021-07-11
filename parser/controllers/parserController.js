@@ -40,6 +40,11 @@ export default {
                         return true
                     }
                 }
+                else {
+                    page.value = 0
+                    await page.save()
+                    return true
+                }
             }
             return false
         } catch (e) {
