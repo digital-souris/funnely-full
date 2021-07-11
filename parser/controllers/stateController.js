@@ -14,7 +14,7 @@ export default {
             await this.parseCounter()
             this.state.nextUpdate = await this.getNextUpdateDate(this.state.channel)
             //state = await this.generateDataToSave()
-            //await this.state.save()
+            await this.state.save()
             return this.state
 
         } catch (e) {
@@ -25,8 +25,8 @@ export default {
     async getBodyPublication() {
         try {
             const page = await parserHelper.loadPage(this.state.link)
-            if (page && page.statusCode === 200) {
-                let json = parserHelper.getDataByBody(page.body, 'w._data = {')
+            if (page && page.status === 200) {
+                let json = parserHelper.getDataByBody(page.data, 'w._data = {')
                 json = JSON.parse(json)
                 this.helpers.ownerUid = json.publisher.ownerUid
                 this.helpers.publisherId = json.publisher.id
@@ -47,8 +47,8 @@ export default {
             if (this.helpers.publisherId) {
                 const href = `https://zen.yandex.ru/api/comments/top-comments?withUser=true&publisherId=${this.helpers.publisherId}&documentId=${this.helpers.documentID}&channelOwnerUid=${this.helpers.ownerUid}`
                 const page = await parserHelper.loadPage(href)
-                if (page && page.statusCode === 200) {
-                    let json = page.body
+                if (page && page.status === 200) {
+                    let json = page.data
                     this.state.likes = {
                         all: json.publicationLikeCount,
                         gender: {
@@ -81,8 +81,8 @@ export default {
         try {
             const link = `https://zen.yandex.ru/api/comments/child-comments/${comment.id}?publisherId=${comment.publisherId}&documentId=${comment.documentId}&channelOwnerUid=${this.helpers.ownerUid}`
             const page = await parserHelper.loadPage(link)
-            if (page && page.statusCode === 200) {
-                let json = page.body
+            if (page && page.status === 200) {
+                let json = page.data
                 this.state.comments.all += page.body.comments.length
                 // this.state.comments.max = Math.max(this.state.comments.max, json.comments.length)
             } else {
@@ -103,9 +103,8 @@ export default {
             publication = `https://zen.yandex.ru/media-api/publication-view-stat?publicationId=${publication}`
             console.log(publication)
             let page = await parserHelper.loadPage(publication)
-            if (page && page.statusCode === 200) {
-                console.log(this.state)
-                let json = page.body
+            if (page && page.status === 200) {
+                let json = page.data
                 this.state.comments = {
                     all: json.comments,
                     max: 0
@@ -149,8 +148,8 @@ export default {
         try {
             const link = `https://zen.yandex.ru/api/comments/document-likers/${this.state.documentID}?offset=${offset}&limit=100&publisherId=${this.helpers.publisherId}&documentId=${this.helpers.documentID}&commentId=0&channelOwnerUid=${this.helpers.ownerUid}&sorting=top`
             const page = await parserHelper.loadPage(link)
-            if (page && page.statusCode === 200) {
-                const json = page.body
+            if (page && page.status === 200) {
+                const json = page.data
                 for (let author of json.users) {
                     let gender = await this.parseGender(author)
                     if (gender !== undefined) {
