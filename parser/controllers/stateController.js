@@ -6,7 +6,10 @@ import Gender from "../../database/Gender";
 export default {
     async postCreate(state) {
         try {
-            this.data = state
+            this.data = {
+                channel: state.channel,
+                link: state.link
+            }
             this.helpers = {}
             await this.getDataApiPublication()
             await this.getBodyPublication()
