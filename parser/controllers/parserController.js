@@ -6,6 +6,7 @@ import channelController from "./channelController";
 import State from "../../database/State";
 import stateController from "./stateController";
 import moment from 'moment'
+import tress from 'tress'
 
 export default {
     async findChannels(page) {
@@ -130,23 +131,27 @@ export default {
     },
     async startParseStatesData() {
         try {
+            this.job = tress(async (state, done) => {
+                const createState = await stateController.postCreate(state)
+                if (createState) {
+                    console.log(createState)
+                    if (!state.channel.settings.lastState) {
+                        console.log(321)
+                        state.channel.settings.lastState = createState.publishDate
+                        await state.channel.save()
+                    }
+                    else if(moment(state.channel.settings.lastState).isBefore(createState.publishDate)) {
+                        console.log(456)
+                        state.channel.settings.lastState = createState.publishDate
+                        await state.channel.save()
+                    }
+                }
+                return done(null, state)
+            }, 10)
             const states = await State.find({publishDate: undefined}).populate('channel').limit(250)
             if (states && states.length) {
                 for (let state of states) {
-                    const createState = await stateController.postCreate(state)
-                    if (createState) {
-                        console.log(createState)
-                        if (!state.channel.settings.lastState) {
-                            console.log(321)
-                            state.channel.settings.lastState = createState.publishDate
-                            await state.channel.save()
-                        }
-                        else if(moment(state.channel.settings.lastState).isBefore(createState.publishDate)) {
-                            console.log(456)
-                            state.channel.settings.lastState = createState.publishDate
-                            await state.channel.save()
-                        }
-                    }
+                   await this.job.push(state)
                 }
             }
             return true
