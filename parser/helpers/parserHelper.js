@@ -58,7 +58,7 @@ export default {
                 return  this.loadPage(link)
             }*/
             //else {
-            console.log(`Страница ${link} не загрузилась ошибка ${e.response.statusCode}`)
+            console.log(`Страница ${link} не загрузилась ошибка ${e.response}d`)
             return null
             //}
         }
