@@ -152,7 +152,7 @@ export default {
                 else {
                     done(true, 'some')
                 }
-            }, 20)
+            }, 5)
             if (states && states.length) {
                 for (let state of states) {
                    this.q.push(state)
