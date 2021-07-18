@@ -132,23 +132,30 @@ export default {
     async startParseStatesData() {
         try {
             const states = await State.find({publishDate: undefined}).populate('channel').limit(750)
+            this.q = tress(async (state, done) => {
+                const createState = await stateController.postCreate(state)
+                if (createState) {
+                    console.log(createState)
+                    const channel = await Channel.findOne({_id: state.channel._id})
+                    if (!channel) {
+                        console.log(321)
+                        channel.settings.lastState = createState.publishDate
+                        await channel.save()
+                    }
+                    else if(moment(channel.settings.lastState).isBefore(createState.publishDate)) {
+                        console.log(456)
+                        channel.settings.lastState = createState.publishDate
+                        await channel.save()
+                    }
+                    done(null, true)
+                }
+                else {
+                    done(true, 'some')
+                }
+            }, 20)
             if (states && states.length) {
                 for (let state of states) {
-                   const createState = await stateController.postCreate(state)
-                    if (createState) {
-                        console.log(createState)
-                        const channel = await Channel.findOne({_id: state.channel._id})
-                        if (!channel) {
-                            console.log(321)
-                            channel.settings.lastState = createState.publishDate
-                            await channel.save()
-                        }
-                        else if(moment(channel.settings.lastState).isBefore(createState.publishDate)) {
-                            console.log(456)
-                            channel.settings.lastState = createState.publishDate
-                            await channel.save()
-                        }
-                    }
+                   this.q.push(state)
                 }
             }
             return true
