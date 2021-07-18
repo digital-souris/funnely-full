@@ -19,6 +19,8 @@ export default {
                 return this.state
             }
             else {
+                this.state.channel.statesCount--
+                await this.state.channel.save()
                 return this.state.remove()
             }
 
