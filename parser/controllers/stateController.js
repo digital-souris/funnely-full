@@ -9,18 +9,18 @@ export default {
         try {
             this.state = state
             this.helpers = {}
-            const findState = await this.getBodyPublication()
-            if (findState) {
-                await this.getDataApiPublication()
-                await this.parseCounter()
-                this.state.nextUpdate = await this.getNextUpdateDate(this.state.channel)
-                //state = await this.generateDataToSave()
+            await this.getDataApiPublication()
+            await this.getBodyPublication()
+            await this.parseCounter()
+            this.state.nextUpdate = await this.getNextUpdateDate(this.state.channel)
+            //state = await this.generateDataToSave()
+            if (this.state.title) {
                 await this.state.save()
-                return this.state
             }
             else {
-                return this.state.remove()
+                await this.state.remove()
             }
+            return this.state
 
         } catch (e) {
             console.log(e)
