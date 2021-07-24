@@ -99,7 +99,7 @@ export default {
                 'isDelete': {$ne: true}
             }).sort({
                 updatedAt: -1
-            }).limit(5000)
+            }).limit(100)
             if (channels && channels.length) {
                 for(let channel of channels) {
                     await channelController.getStatesToChannel(channel)
@@ -118,7 +118,7 @@ export default {
                 'isDelete': {$ne: 1}
             }).sort({
                 createdAt: 1
-            }).limit(5000)
+            }).limit(100)
             if (channels && channels.length) {
                 for(let channel of channels) {
                     await channelController.getDataByChannel(channel)
@@ -131,7 +131,7 @@ export default {
     },
     async startParseStatesData() {
         try {
-            const states = await State.find({publishDate: undefined}).populate('channel').limit(5000)
+            const states = await State.find({publishDate: undefined}).populate('channel').limit(100)
             if (states && states.length) {
                 for (let state of states) {
                    const createState = await stateController.postCreate(state)
