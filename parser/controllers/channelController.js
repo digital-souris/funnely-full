@@ -10,11 +10,12 @@ export default {
         try {
             const page = await parserHelper.loadPage(channel.link)
             if (page && page.status === 200) {
+                console.log(1)
                 const $ = cheerio.load(page.data)
                 channel.name = $('title').text()
-                console.log(12345)
                 const counter = $('.desktop-channel-3-social-layout__counter-container')
                 if (counter.length) {
+                    console.log(2)
                     for (let i = 0; i < counter.length ; i++) {
                         const counterItem = counter.eq(i)
                         const counterName = counterItem.find('.desktop-channel-3-counter__name').text()
@@ -27,8 +28,12 @@ export default {
                             channel.settings.auditory = counterValue
                         }
                     }
-                    await channel.save()
                 }
+                else {
+                    channel.settings.subscribers = 0
+                    channel.settings.auditory = 0
+                }
+                await channel.save()
             }
             else {
                 channel.isDelete = 1
