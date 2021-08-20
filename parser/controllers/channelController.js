@@ -57,6 +57,7 @@ export default {
             else {
                 channel.isDelete = 1
             }
+            channel.settings.parseStatus = 'parseStates'
             await channel.save()
             return channel
         }

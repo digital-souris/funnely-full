@@ -94,8 +94,7 @@ export default {
     async startParseStates() {
         try {
             const channels = await Channel.find({
-                'settings.statesCount': 0,
-                'isDelete': {$ne: true}
+                'settings.parseStatus': 'parseData',
             }).sort({
                 createdAt: -1
             }).limit(100)
