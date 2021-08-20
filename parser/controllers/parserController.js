@@ -96,7 +96,7 @@ export default {
             const channels = await Channel.find({
                 'settings.parseStatus': 'parseData',
             }).sort({
-                createdAt: -1
+                createdAt: 1
             }).limit(100)
             if (channels && channels.length) {
                 for(let channel of channels) {
