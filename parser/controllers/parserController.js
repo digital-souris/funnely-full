@@ -113,7 +113,7 @@ export default {
         try {
             const channels = await Channel.find({
                 'settings.parseStatus': {
-                    $or: ['new', undefined]
+                    $in: ['new', undefined]
                 },
                 'isDelete': {$ne: 1},
             }).sort({
