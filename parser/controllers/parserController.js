@@ -95,7 +95,6 @@ export default {
         try {
             const channels = await Channel.find({
                 'settings.statesCount': 0,
-                'settings.auditory': {$ne: 0},
                 'isDelete': {$ne: true}
             }).sort({
                 createdAt: -1
@@ -113,9 +112,10 @@ export default {
     async  startParseChannelData() {
         try {
             const channels = await Channel.find({
-                'settings.subscribers': 0,
-                'settings.auditory': 0,
-                'isDelete': {$ne: 1}
+                'settings.parseStatus': {
+                    $or: ['new', undefined]
+                },
+                'isDelete': {$ne: 1},
             }).sort({
                 createdAt: 1
             }).limit(100)

@@ -33,12 +33,12 @@ export default {
                     channel.settings.subscribers = 0
                     channel.settings.auditory = 0
                 }
-                await channel.save()
             }
             else {
                 channel.isDelete = 1
-                await channel.save()
             }
+            channel.settings.parseStatus = 'parseData'
+            await channel.save()
             return channel
         }
         catch (e) {

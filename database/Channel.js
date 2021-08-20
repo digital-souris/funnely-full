@@ -48,6 +48,10 @@ const channelSchema = new Schema({
         },
         lastState: {
             type: Date
+        },
+        parseStatus: {
+            type: String,
+            default: 'new'
         }
     },
     lastUpdate: {
