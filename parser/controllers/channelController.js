@@ -50,7 +50,13 @@ export default {
         try {
             const channels = await this.findStatesToChannel(channel.link, [], channel)
             if (channels.length) {
-                await State.insertMany(channels)
+                for (let state of channels) {
+                    const findState = await State.findOne({link: state.link})
+                    if (!findState) {
+                        await State.create(state)
+                    }
+                }
+                //await State.insertMany(channels)
                 channel.lastUpdate = moment().format('YYYY-MM-DD hh:mm')
                 channel.settings.statesCount = channels.length
             }
