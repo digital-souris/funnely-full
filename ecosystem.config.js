@@ -11,11 +11,22 @@ module.exports = {
             env: {
                 PORT: 3001,
             },
-            "exec_mode": "cluster",
-            instances: 'max',
-            "cron_restart": "30 * * * * *",
+            "exec_mode": process.env.NODE_ENV === 'production' ? "cluster" : '',
+            instances:  process.env.NODE_ENV === 'production' ? 'max': 1,
+            "cron_restart": "0 * * * * *",
             out_file: "/dev/null",
             error_file: "/dev/null"
+        },
+        {
+            name: 'server',
+            script: './server/app.js',
+            watch: process.env.NODE_ENV !== 'production',
+            env: {
+                PORT: 3002
+            },
+            out_file: "/dev/null",
+            error_file: "/dev/null"
+
         }
     ],
 

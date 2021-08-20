@@ -46,7 +46,7 @@ export default {
             let page = undefined
             console.log(link)
             setTimeout(async () => {
-                if (typeof page === "undefined" && error < 5) {
+                if (typeof page === "undefined" && error < 2) {
                     await this.loadPage(link, error++)
                 }
             }, 5000)
@@ -58,7 +58,11 @@ export default {
                 return  this.loadPage(link)
             }*/
             //else {
+
             console.log(`Страница ${link} не загрузилась ошибка ${e.response}d`)
+            if (e.response.status !== 200) {
+                return false
+            }
             return null
             //}
         }

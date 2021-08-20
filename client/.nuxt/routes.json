@@ -1,0 +1,37 @@
+[
+  {
+    "name": "auth-login",
+    "path": "/auth/login",
+    "component": "D:\\\\works\\\\funnely-full\\\\client\\\\pages\\\\auth\\\\login.vue",
+    "chunkName": "pages/auth/login",
+    "_name": "_e487bce2"
+  },
+  {
+    "name": "auth-register",
+    "path": "/auth/register",
+    "component": "D:\\\\works\\\\funnely-full\\\\client\\\\pages\\\\auth\\\\register.vue",
+    "chunkName": "pages/auth/register",
+    "_name": "_d3534e26"
+  },
+  {
+    "name": "auth-reset",
+    "path": "/auth/reset",
+    "component": "D:\\\\works\\\\funnely-full\\\\client\\\\pages\\\\auth\\\\reset.vue",
+    "chunkName": "pages/auth/reset",
+    "_name": "_6cd6ec75"
+  },
+  {
+    "name": "auth-verify",
+    "path": "/auth/verify",
+    "component": "D:\\\\works\\\\funnely-full\\\\client\\\\pages\\\\auth\\\\verify.vue",
+    "chunkName": "pages/auth/verify",
+    "_name": "_57007c43"
+  },
+  {
+    "name": "index",
+    "path": "/",
+    "component": "D:\\\\works\\\\funnely-full\\\\client\\\\pages\\\\index.vue",
+    "chunkName": "pages/index",
+    "_name": "_c68d1dc0"
+  }
+]

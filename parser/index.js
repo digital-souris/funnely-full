@@ -31,8 +31,15 @@ db.once('open', async () => {
     app.listen(process.env.PORT, () => {
         console.log(`Сервер запущен ` + process.env.PORT)
     })
-    parserController.findChannels()
-    parserController.startParseChannelData()
-    parserController.startParseStates()
-    parserController.startParseStatesData()
+    const date = new Date()
+    if (date.getHours() % 4 === 0) {
+        await parserController.findChannels()
+    }
+    else if (date.getHours() % 3 === 0) {
+        await parserController.startParseChannelData()
+    }
+    else {
+        await parserController.startParseStates()
+        await parserController.startParseStatesData()
+    }
 })
