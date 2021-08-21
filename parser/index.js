@@ -4,7 +4,6 @@ import bodyParser from 'body-parser'
 import morgan from 'morgan'
 import database from '../config/database'
 import parserController from "./controllers/parserController";
-import "../config/cron";
 dotenv.config()
 
 const app = express()
