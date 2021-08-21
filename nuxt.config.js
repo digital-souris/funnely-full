@@ -5,7 +5,7 @@ module.exports ={
         modern: 'client'
     }),
     telemetry: false,
-    rootDir: __dirname,
+    rootDir: __dirname + '/client',
     head: {
         htmlAttrs: {
             lang: 'ru'

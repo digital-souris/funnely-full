@@ -9,7 +9,7 @@ import { Nuxt, Builder } from 'nuxt'
 
 import routes from './routes/index'
 
-let config = require('../client/nuxt.config.js')
+let config = require('../nuxt.config.js')
 config.dev = !(process.env.NODE_ENV === 'production')
 
 dotenv.config()
