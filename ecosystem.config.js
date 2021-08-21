@@ -13,7 +13,7 @@ module.exports = {
                 PORT: 3001,
             },
             "exec_mode": process.env.NODE_ENV === 'production' ? "cluster" : '',
-            instances:  process.env.NODE_ENV === 'production' ? "max" : '1',
+            instances:  '1',
             "cron_restart": "0 0 * * * *",
             out_file: "/dev/null",
             error_file: "/dev/null"
