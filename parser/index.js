@@ -5,8 +5,6 @@ import morgan from 'morgan'
 import database from '../config/database'
 import parserController from "./controllers/parserController";
 import "../config/cron";
-import Channel from "../database/Channel";
-import channelController from "./controllers/channelController";
 dotenv.config()
 
 const app = express()
@@ -31,8 +29,8 @@ db.once('open', async () => {
     app.listen(process.env.PORT, () => {
         console.log(`Сервер запущен ` + process.env.PORT)
     })
-    await parserController.startParseStates()
-    await parserController.startParseStatesData()
-    await parserController.findChannels()
-    await parserController.startParseChannelData()
+    parserController.startParseStates()
+    parserController.startParseStatesData()
+    parserController.findChannels()
+    parserController.startParseChannelData()
 })
