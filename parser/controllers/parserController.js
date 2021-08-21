@@ -126,7 +126,7 @@ export default {
     },
     async startParseStatesData() {
         try {
-            const states = await State.find({publishDate: undefined}).populate('channel').limit(1000)
+            const states = await State.find({publishDate: undefined}).populate('channel').limit(20000)
             if (states && states.length) {
                 for (let state of states) {
                    const createState = await stateController.postCreate(state)
