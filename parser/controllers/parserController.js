@@ -51,9 +51,7 @@ export default {
     },
     async loadPageToChannels(number) {
         try {
-            console.log(11)
             const page = await parserHelper.loadPage(`https://zen.yandex.ru/media/zen/channels?page=${number}`)
-            console.log(12)
             if (page && page.status === 200) {
                 let channels = []
                 let next = false
@@ -93,7 +91,7 @@ export default {
                 'settings.parseStatus': 'parseData',
             }).sort({
                 createdAt: 1
-            }).limit(10)
+            }).limit(100)
             if (channels && channels.length) {
                 for(let channel of channels) {
                     await channelController.getStatesToChannel(channel)
