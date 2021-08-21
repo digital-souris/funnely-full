@@ -38,11 +38,11 @@
     "node-fetch": "^2.6.1",
     "nuxt": "^2.15.8",
     "request": "^2.88.2",
+    "sass": "~1.32.12",
+    "sass-loader": "^10.1.1",
     "tress": "^1.1.4",
     "vee-validate": "^3.4.11",
-    "vue-feather-icons": "^5.1.0",
-    "sass-loader": "^10.1.1",
-    "sass": "~1.32.12"
+    "vue-feather-icons": "^5.1.0"
   },
   "devDependencies": {
     "@babel/cli": "^7.14.5",

@@ -1,9 +1,13 @@
 import express from 'express'
 import dotenv from 'dotenv'
 import bodyParser from 'body-parser'
+import cookieParser from 'cookie-parser'
+import csrf from 'csurf'
 import morgan from 'morgan'
 import database from '../config/database'
 import { Nuxt, Builder } from 'nuxt'
+
+import routes from 'routes/index'
 
 let config = require('../client/nuxt.config.js')
 config.dev = !(process.env.NODE_ENV === 'production')
@@ -22,6 +26,12 @@ if (process.env.NODE_ENV !== 'production') {
 
 app.use(bodyParser.urlencoded({extended: false}))
 app.use(bodyParser.json())
+
+app.use(cookieParser())
+
+app.use(csrf({cookie: true}))
+
+app.use(routes)
 
 const db = database.connection
 
