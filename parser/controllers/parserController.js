@@ -93,7 +93,7 @@ export default {
                 'settings.parseStatus': 'parseData',
             }).sort({
                 createdAt: 1
-            }).limit(100)
+            }).limit(10)
             if (channels && channels.length) {
                 for(let channel of channels) {
                     await channelController.getStatesToChannel(channel)
