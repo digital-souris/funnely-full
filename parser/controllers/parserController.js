@@ -18,11 +18,8 @@ export default {
                     page.value = 1
                 }
             }
-            console.log(2)
             if (page.value) {
                 const channels = await this.loadPageToChannels(page.value)
-                console.log(3)
-                console.log(channels)
                 if (channels && channels.length) {
                     for (let channel of channels) {
                         const channelInDb = await Channel.findOne({link: channel})
@@ -30,7 +27,6 @@ export default {
                             await this.createChannelToDatabase(channel)
                         }
                     }
-                    console.log(4)
                     if (channels.length) {
                         page.value++
                         await page.save()
@@ -103,6 +99,7 @@ export default {
                     await channelController.getStatesToChannel(channel)
                 }
             }
+            return true
         }
         catch (e) {
             console.log(e)
@@ -123,6 +120,7 @@ export default {
                     await channelController.getDataByChannel(channel)
                 }
             }
+            return true
         }
         catch (e) {
             console.log(e)
@@ -135,10 +133,8 @@ export default {
                 for (let state of states) {
                    const createState = await stateController.postCreate(state)
                     if (createState) {
-                        console.log(createState)
                         const channel = await Channel.findOne({_id: state.channel._id})
                         if (!channel) {
-                            console.log(321)
                             channel.settings.lastState = createState.publishDate
                             await channel.save()
                         }

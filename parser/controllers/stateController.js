@@ -106,7 +106,6 @@ export default {
             publication = publication[publication.length - 1]
             this.helpers.documentID = `native%3A${publication}`
             publication = `https://zen.yandex.ru/media-api/publication-view-stat?publicationId=${publication}`
-            console.log(publication)
             let page = await parserHelper.loadPage(publication)
             if (page && page.status === 200) {
                 let json = page.data
@@ -224,7 +223,6 @@ export default {
     },
 
     generateDataToSave() {
-        console.log(this.state)
         //let isParser = this.state.content.isPartner
         this.state = {
             views: {

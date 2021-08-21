@@ -51,7 +51,6 @@ export default {
                 }
             }, 5000)
             page = await axios.get(link)
-            console.log(page.status)
             return page
         } catch (e) {
             /*if (!this.agent) {

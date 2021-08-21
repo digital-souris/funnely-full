@@ -10,12 +10,10 @@ export default {
         try {
             const page = await parserHelper.loadPage(channel.link)
             if (page && page.status === 200) {
-                console.log(1)
                 const $ = cheerio.load(page.data)
                 channel.name = $('title').text()
                 const counter = $('.desktop-channel-3-social-layout__counter-container')
                 if (counter.length) {
-                    console.log(2)
                     for (let i = 0; i < counter.length ; i++) {
                         const counterItem = counter.eq(i)
                         const counterName = counterItem.find('.desktop-channel-3-counter__name').text()
@@ -50,13 +48,7 @@ export default {
         try {
             const channels = await this.findStatesToChannel(channel.link, [], channel)
             if (channels.length) {
-                for (let state of channels) {
-                    const findState = await State.findOne({link: state.link})
-                    if (!findState) {
-                        await State.create(state)
-                    }
-                }
-                //await State.insertMany(channels)
+                await State.insertMany(channels)
                 channel.lastUpdate = moment().format('YYYY-MM-DD hh:mm')
                 channel.settings.statesCount = channels.length
             }
@@ -78,7 +70,6 @@ export default {
             let json
             const page = await parserHelper.loadPage(link)
             if (page && page.status === 200) {
-                console.log(typeof page.data)
                 if (!links.length && typeof page.data !== "object") {
                     json = parserHelper.getDataByBody(page.data, 'exportData":{')
                     json = JSON.parse(json)
@@ -92,7 +83,6 @@ export default {
                             const stateInArray = await _.findIndex(links, (item) => {
                                 return item.link === findState
                             })
-                            console.log('State in Arrray ' +stateInArray)
                             if (stateInArray === -1) {
                                 links.push({link:findState, channel: channel})
                             }

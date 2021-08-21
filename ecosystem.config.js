@@ -8,11 +8,13 @@ module.exports = {
             name: 'parser',
             script: './parser/app.js',
             watch: process.env.NODE_ENV !== 'production',
+
             env: {
                 PORT: 3001,
             },
             "exec_mode": process.env.NODE_ENV === 'production' ? "cluster" : '',
-            "cron_restart": "0 * * * * *",
+            instances:  1,
+            "cron_restart": "0 0 * * * *",
             out_file: "/dev/null",
             error_file: "/dev/null"
         },
@@ -24,7 +26,8 @@ module.exports = {
                 PORT: 3002
             },
             out_file: "/dev/null",
-            error_file: "/dev/null"
+            error_file: "/dev/null",
+            wait_ready: true,
 
         }
     ],
