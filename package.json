@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "git pull && yarn install && nuxt build && pm2 restart ecosystem.config.js"
+    "start": "git pull && yarn install  && pm2 restart ecosystem.config.js"
   },
   "author": "",
   "license": "ISC",
