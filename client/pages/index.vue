@@ -19,6 +19,7 @@
                                 <th data-name="lastName">Ссылка</th>
                                 <th data-name="jobTitle" data-breakpoints="xs">Подписчиков</th>
                                 <th>Аудитория</th>
+                                <th>Кол-во статей</th>
                                 <th>Последнее обновление</th>
                                 <th>Управление</th>
                             </tr>
@@ -31,6 +32,7 @@
                                 </td>
                                 <td>{{channel.settings.subscribers}}</td>
                                 <td>{{channel.settings.auditory}}</td>
+                                <td>{{channel.settings.statesCount}}</td>
                                 <td>{{getDate(channel.updatedAt)}}</td>
                                 <td>
                                     <a v-if="$auth.user && !channel.user && addChannel.indexOf(channel._id) === -1" href="#" @click.prevent="addChannelToUser(channel._id)" class="mr-2 url-control"><i class="mdi mdi-bookmark-plus"></i></a>

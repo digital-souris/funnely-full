@@ -30,11 +30,11 @@ export default {
             let query, count
             if (search.length) {
                 count = await Channel.countDocuments({ "name": { "$regex": search, "$options": "i" }})
-                query = await Channel.find({ "name": { "$regex": search, "$options": "i" }}).skip((page - 1) * 20).limit(20).sort('-createdAt')
+                query = await Channel.find({ "name": { "$regex": search, "$options": "i" }}).skip((page - 1) * 20).limit(20).sort('createdAt')
             }
             else {
                 count = await Channel.countDocuments({name: {$ne: undefined}})
-                query = await Channel.find({name: {$ne: undefined}}).skip((page - 1) * 20).limit(20).sort('-createdAt')
+                query = await Channel.find({name: {$ne: undefined}}).skip((page - 1) * 20).limit(20).sort('createdAt')
             }
             return res.json({query, count})
 
