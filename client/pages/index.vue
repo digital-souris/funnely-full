@@ -54,6 +54,24 @@
     export default {
         name: "Index",
         components: {Paginator},
+        async asyncData({app, query}) {
+            const page = query.page || 1
+            const resp = await app.$axios.get(`/channels?page=${page}`)
+            if (resp.status === 200) {
+                console.log(resp.data)
+                return {
+                    channels: resp.data
+                }
+            }
+            else {
+                return {
+                    channels: {
+                        query: [],
+                        count: 0
+                    }
+                }
+            }
+        },
         data() {
             return {
                 channels: {},
@@ -73,7 +91,6 @@
             }
         },
         mounted() {
-            this.getStates()
         },
         methods: {
             getDate(date) {
