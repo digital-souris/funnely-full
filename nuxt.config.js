@@ -83,7 +83,7 @@ module.exports ={
         }
     },
     axios: {
-        baseUrl: 'http://localhost:3002/api',
+        baseUrl: process.env.BASE_URL,
     },
     render: {
         resourceHints: false
