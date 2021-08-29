@@ -83,7 +83,7 @@ module.exports ={
         }
     },
     axios: {
-        baseUrl: process.env.BASE_URL,
+        baseUrl: process.env.NODE_ENV !== 'production' ? process.env.BASE_URL : 'https://funnelly.ru/api',
     },
     render: {
         resourceHints: false
