@@ -2,7 +2,6 @@ import express from 'express'
 import dotenv from 'dotenv'
 import bodyParser from 'body-parser'
 import cookieParser from 'cookie-parser'
-import csrf from 'csurf'
 import morgan from 'morgan'
 import database from '../config/database'
 import { Nuxt, Builder } from 'nuxt'
@@ -32,7 +31,6 @@ app.use(bodyParser.json())
 
 app.use(cookieParser())
 
-app.use(csrf({cookie: true}))
 
 
 app.use(passport.initialize())
