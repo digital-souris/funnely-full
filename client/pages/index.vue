@@ -34,9 +34,9 @@
                                 <td style="max-width: 250px">
                                     <a :href="channel.link" target="_blank">{{channel.link}}</a>
                                 </td>
-                                <td>{{channel.likes.all}}</td>
-                                <td>{{channel.views.all}}</td>
-                                <td>{{channel.views.toEnd}}</td>
+                                <td>{{channel.likes ? channel.likes.all : 0}}</td>
+                                <td>{{channel.views ?channel.views.all: 0}}</td>
+                                <td>{{channel.views ? channel.views.toEnd : 0}}</td>
                                 <td>{{getDate(channel.publishDate)}}</td>
                                 <td>
                                     <a :href="channel.link" target="_blank" class="mr-2 url-control"><i
