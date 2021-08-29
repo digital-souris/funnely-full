@@ -29,8 +29,8 @@ export default {
             const search = req.query.search || ''
             let query, count
             if (search.length) {
-                count = await Channel.countDocuments({$text: {$search: search}})
-                query = await Channel.find({$text: {$search: search}}).skip((page - 1) * 20).limit(20).sort('-createdAt')
+                count = await Channel.countDocuments({ "name": { "$regex": search, "$options": "i" }})
+                query = await Channel.find({ "name": { "$regex": search, "$options": "i" }}).skip((page - 1) * 20).limit(20).sort('-createdAt')
             }
             else {
                 count = await Channel.countDocuments({name: {$ne: undefined}})

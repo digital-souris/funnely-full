@@ -1,4 +1,5 @@
 import mongoose from '../config/database'
+import textSearch from 'mongoose-text-search'
 
 const Schema = mongoose.Schema
 
@@ -59,8 +60,8 @@ const channelSchema = new Schema({
     }
 }, {timestamps: true})
 
-channelSchema.index({
-    '$**': 'text',
-})
+channelSchema.plugin(textSearch);
+
+channelSchema.index({ name: 'text' });
 
 export default mongoose.model('Channel', channelSchema)
