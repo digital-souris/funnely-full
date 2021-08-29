@@ -9,7 +9,7 @@
                     </div>
                 </div>
             </div>
-            <div class="col-12" v-if="channels.query">
+            <div class="col-12" v-if="channels && channels.query">
                 <div class="card">
                     <div class="card-body">
                         <table id="footable-1" class="table" data-sorting="true">
@@ -54,7 +54,7 @@
         components: {Paginator},
         data() {
             return {
-                channels: [],
+                channels: {},
                 searchText: '',
                 addChannel: []
             }

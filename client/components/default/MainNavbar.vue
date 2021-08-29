@@ -12,7 +12,7 @@
                             Мои каналы
                         </a>
                         <ul class="submenu">
-                            <nuxt-link v-if="$auth.user.channels && $auth.user.channels.length" v-for="item in $auth.user.channels" :key="item._id" :to="item._id" tag="li"><a>{{item.name}}</a></nuxt-link>
+                            <nuxt-link v-for="item in getChannels" :key="item._id" :to="item._id" tag="li"><a>{{item.name}}</a></nuxt-link>
                             <li><a href="#" @click="">Добавить канал</a></li>
                         </ul>
                     </li>
@@ -207,7 +207,18 @@
 
 <script>
     export default {
-        name: "MainNavbar"
+        name: "MainNavbar",
+        computed: {
+            getChannels() {
+                if (!this.$auth.user) {
+                    return []
+                }
+                if (!this.$auth.user.channels.length) {
+                    return []
+                }
+                return this.$auth.user.channels
+            }
+        }
     }
 </script>
 

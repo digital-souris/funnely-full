@@ -14,7 +14,7 @@
                 </a>
             </div>
 
-            <ul v-if="$auth.user" class="list-unstyled topbar-nav float-right">
+            <ul class="list-unstyled topbar-nav float-right">
                 <li v-if="$auth.user">
                     <div class="float-right align-item-center mt-3 mr-4">
                         <button @click="goToAddChannel" class="btn btn-info px-4 align-self-center report-btn">Добавить канал</button>
