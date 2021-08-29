@@ -9,11 +9,11 @@ export default {
             let query, count
             if (search.length) {
                 count = await State.countDocuments({ "title": { "$regex": search, "$options": "i" }})
-                query = await State.find({ "title": { "$regex": search, "$options": "i" }}).skip((page - 1) * 20).limit(20).sort('createdAt')
+                query = await State.find({ "title": { "$regex": search, "$options": "i" }}).skip((page - 1) * 20).limit(20)
             }
             else {
                 count = await State.countDocuments({title: {$ne: undefined}})
-                query = await State.find({title: {$ne: undefined}}).skip((page - 1) * 20).limit(20).sort('createdAt')
+                query = await State.find({title: {$ne: undefined}}).skip((page - 1) * 20).limit(20)
             }
             return res.json({query, count})
 
