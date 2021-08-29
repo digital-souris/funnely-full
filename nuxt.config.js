@@ -30,6 +30,10 @@ module.exports ={
     serverMiddleware: [
         // '~~/serverMiddleware/headers'
     ],
+    css: [
+        '~/assets/css/icons.css',
+        '~/assets/css/style.css'
+    ],
     router: {
         middleware: [],
         prefetchLinks: false,
@@ -39,7 +43,8 @@ module.exports ={
     loading: { color: '#ddd' },
     plugins: [
         '~~/plugins/vue-validate.js',
-        '~~/plugins/vue-axios.js'
+        '~~/plugins/vue-axios.js',
+        '~~/plugins/vue-modal.js'
     ],
     modules: [
         '@nuxtjs/pwa',

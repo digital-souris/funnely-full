@@ -5,6 +5,7 @@
 <script>
     export default {
         name: "verify",
+        layout: 'empty',
         middleware: 'noAuth',
         async asyncData({query, error, app, redirect}) {
             try {
@@ -12,7 +13,7 @@
                     const resp = await app.$axios.post('/auth/verify', {
                         token: query.token
                     })
-                    if (resp.status == 200) {
+                    if (resp.status === 200) {
                         app.$toast.success(resp.data.message)
                     }
                     else {

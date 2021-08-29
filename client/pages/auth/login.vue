@@ -163,6 +163,7 @@
                 passwordFieldType: 'password',
             }
         },
+        layout: 'empty',
         middleware: 'noAuth',
         components: {
             Logo, ValidationObserver, ValidationProvider, FeatherIcon

@@ -5,7 +5,8 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "git pull && yarn install  && pm2 restart ecosystem.config.js"
+    "start": "git pull && yarn install && nuxt build  && pm2 restart ecosystem.config.js",
+    "serve": "nodemon server/app.js"
   },
   "author": "",
   "license": "ISC",
@@ -19,6 +20,7 @@
     "async-request": "^1.2.0",
     "axios": "^0.21.1",
     "axios-retry": "^3.1.9",
+    "bcrypt": "^5.0.1",
     "body-parser": "^1.19.0",
     "bootstrap-vue": "^2.21.2",
     "cheerio": "^1.0.0-rc.10",
@@ -28,6 +30,7 @@
     "dotenv": "^10.0.0",
     "express": "^4.17.1",
     "https-proxy-agent": "^5.0.0",
+    "jsonwebtoken": "^8.5.1",
     "lodash": "^4.17.21",
     "moment": "^2.29.1",
     "mongoose": "^5.12.13",
@@ -36,13 +39,17 @@
     "needle": "^2.7.0",
     "node-cron": "^3.0.0",
     "node-fetch": "^2.6.1",
+    "nodemailer": "^6.6.3",
     "nuxt": "^2.15.8",
+    "passport": "^0.4.1",
+    "passport-jwt": "^4.0.0",
     "request": "^2.88.2",
     "sass": "~1.32.12",
     "sass-loader": "^10.1.1",
     "tress": "^1.1.4",
     "vee-validate": "^3.4.11",
-    "vue-feather-icons": "^5.1.0"
+    "vue-feather-icons": "^5.1.0",
+    "vue-js-modal": "^2.0.1"
   },
   "devDependencies": {
     "@babel/cli": "^7.14.5",

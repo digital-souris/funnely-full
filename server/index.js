@@ -6,6 +6,7 @@ import csrf from 'csurf'
 import morgan from 'morgan'
 import database from '../config/database'
 import { Nuxt, Builder } from 'nuxt'
+import passport from './config/passport'
 
 import routes from './routes/index'
 
@@ -13,6 +14,8 @@ let config = require('../nuxt.config.js')
 config.dev = !(process.env.NODE_ENV === 'production')
 
 dotenv.config()
+
+const port = process.env.PORT || 3002
 
 
 const app = express()
@@ -31,7 +34,10 @@ app.use(cookieParser())
 
 app.use(csrf({cookie: true}))
 
-app.use(routes)
+
+app.use(passport.initialize())
+app.use('/api', routes)
+
 
 const db = database.connection
 
@@ -49,7 +55,7 @@ db.once('open', async () => {
         await nuxt.ready()
     }
     app.use(nuxt.render)
-    app.listen(process.env.PORT, () => {
-        console.log(`Сервер запущен ` + process.env.PORT)
+    app.listen(port, () => {
+        console.log(`Сервер запущен ` + port)
     })
 })

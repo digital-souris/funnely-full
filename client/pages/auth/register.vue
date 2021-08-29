@@ -186,6 +186,7 @@
     export default {
         name: 'Register',
         middleware: 'noAuth',
+        layout: 'empty',
         components: {
             Logo,
             ValidationProvider,

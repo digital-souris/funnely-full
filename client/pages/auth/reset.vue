@@ -200,6 +200,7 @@
         },
         name: "reset",
         middleware: 'noAuth',
+        layout: 'empty',
         components: {
             Logo,
             ValidationProvider,

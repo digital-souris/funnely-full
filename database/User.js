@@ -1,5 +1,6 @@
 import mongoose from '../config/database'
-import userHooks from "../app/hooks/userHooks";
+import userHooks from "./hooks/userHooks";
+
 
 const Schema = mongoose.Schema
 
@@ -40,12 +41,5 @@ const userTheme = new Schema({
         }
     ]
 }, { timestamps: true })
-
-userTheme.pre('save', function () {
-    userHooks.generatePassword(this)
-})
-userTheme.post('save', async function () {
-    await userHooks.sendMailAfterRegister(this)
-})
 
 export default mongoose.model('User', userTheme)

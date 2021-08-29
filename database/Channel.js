@@ -59,5 +59,8 @@ const channelSchema = new Schema({
     }
 }, {timestamps: true})
 
+channelSchema.index({
+    '$**': 'text',
+})
 
 export default mongoose.model('Channel', channelSchema)
