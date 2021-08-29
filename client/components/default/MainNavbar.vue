@@ -1,7 +1,7 @@
 <template>
-    <div class="navbar-custom-menu">
+    <div class="navbar-custom-menu" >
 
-        <div class="container-fluid">
+        <div class="container-fluid" v-if="$auth.user">
             <div id="navigation">
                 <!-- Navigation Menu-->
                 <ul class="navigation-menu list-unstyled">
@@ -13,7 +13,7 @@
                         </a>
                         <ul class="submenu">
                             <nuxt-link v-for="item in getChannels" :key="item._id" :to="item._id" tag="li"><a>{{item.name}}</a></nuxt-link>
-                            <li><a href="#" @click="">Добавить канал</a></li>
+                            <li><a href="#" @click.prevent="$modal.show('addChannel')">Добавить канал</a></li>
                         </ul>
                     </li>
 

@@ -4,20 +4,20 @@
         <nav class="navbar-custom">
             <!-- LOGO -->
             <div class="topbar-left">
-                <a href="index.html" class="logo">
+                <nuxt-link :to="'/'" class="logo">
                         <span>
                             <img :src="require('~/assets/images/logo-sm.png')" alt="logo-small" class="logo-sm">
                         </span>
                     <span>
                             <img :src="require('~/assets/images/logo-dark.png')" alt="logo-large" class="logo-lg">
                         </span>
-                </a>
+                </nuxt-link>
             </div>
 
             <ul class="list-unstyled topbar-nav float-right">
                 <li v-if="$auth.user">
                     <div class="float-right align-item-center mt-3 mr-4">
-                        <button @click="goToAddChannel" class="btn btn-info px-4 align-self-center report-btn">Добавить канал</button>
+                        <button @click="$modal.show('addChannel')" class="btn btn-info px-4 align-self-center report-btn">Добавить канал</button>
                     </div>
                 </li>
                 <li class="dropdown">

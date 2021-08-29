@@ -57,6 +57,10 @@ const channelSchema = new Schema({
     },
     lastUpdate: {
         type: Date
+    },
+    priority: {
+        type: Number,
+        default: 0
     }
 }, {timestamps: true})
 

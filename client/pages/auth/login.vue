@@ -177,8 +177,7 @@
             async sendForm() {
                 try {
                     let response = await this.$auth.loginWith('local', {data: this.login})
-                    console.log(response.data)
-                    if (response.status == 200) {
+                    if (response.status === 200) {
 
                     }
                     else {

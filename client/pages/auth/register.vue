@@ -218,7 +218,9 @@
                         const resp = await this.$axios.post('/auth/register', this.register)
                         if (resp.status == 200) {
                             await this.$router.replace({path:'/auth/login'})
-                            await this.$toast.success('Регистрация прошла успешно')
+                            await this.$toast.success('Регистрация прошла успешно', {
+                                duration: 2000
+                            })
                         }
                         else {
                             return this.message = resp.data.message
