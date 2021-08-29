@@ -141,7 +141,6 @@
             const page = query.page || 1
             const resp = await app.$axios.get(`/states?page=${page}`)
             if (resp.status === 200) {
-                console.log(resp.data)
                 return {
                     channels: resp.data
                 }
